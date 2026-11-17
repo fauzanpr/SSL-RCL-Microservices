@@ -1,0 +1,11 @@
+# Versi yang teruji di mesin lama (Python 3.11, macOS M1).
+# Untuk GPU NVIDIA, pasang torch dulu sesuai CUDA dari https://pytorch.org/get-started/locally/
+torch>=2.4
+numpy>=2.0
+pandas>=2.2
+pyarrow>=15          # baca metrics.parquet
+matplotlib>=3.8
+huggingface_hub>=0.24  # unduh dataset RCAEval
+pillow>=10           # output/progress_slides/render_slides.py
+jupyterlab>=4
+ipykernel>=6

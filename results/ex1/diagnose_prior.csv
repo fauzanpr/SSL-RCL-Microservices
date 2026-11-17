@@ -1,0 +1,13 @@
+source,uji,AC@1,AC@3,AC@5,Avg@5,n
+RE1,prior frekuensi (tanpa data),0.2,0.6,1.0,0.6,75
+RE1,acak (1/N),0.058,0.173,0.289,,75
+RE1,"model, data normal",0.907,0.987,1.0,0.965,75
+RE1,"model, anomali dihapus",0.027,0.227,0.387,0.221,75
+RE2,prior frekuensi (tanpa data),0.2,0.6,1.0,0.6,45
+RE2,acak (1/N),0.057,0.172,0.287,,45
+RE2,"model, data normal",0.911,0.933,0.956,0.933,45
+RE2,"model, anomali dihapus",0.089,0.267,0.444,0.262,45
+RE3,prior frekuensi (tanpa data),0.5,1.0,1.0,0.878,18
+RE3,acak (1/N),0.056,0.168,0.28,,18
+RE3,"model, data normal",1.0,1.0,1.0,1.0,18
+RE3,"model, anomali dihapus",0.0,0.444,0.611,0.378,18

@@ -1,0 +1,38 @@
+# --- Data dan artefak yang bisa dibuat ulang ---
+# Dataset RCAEval (±3.2 GB, atau symlink ke folder dataset). Unduh dengan scripts/download_dataset.py
+dataset
+dataset/
+# Cache praproses (.pt, ±300 MB). Dibuat ulang otomatis oleh build_samples / scripts/prepare_data.py
+cache/
+# Checkpoint encoder hasil pre-training. Salin manual kalau ingin dipakai ulang tanpa pretrain ulang
+checkpoints/
+*.pt
+*.pth
+*.ckpt
+
+# Zip checkpoint untuk dipindah manual (lihat README)
+checkpoints_*.zip
+
+# Arsip duplikat dari PNG slide
+output/progress_slides/*.zip
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+.python-version
+
+# --- Jupyter ---
+.ipynb_checkpoints/
+
+# --- OS / editor ---
+.DS_Store
+.vscode/
+.idea/
+
+# --- Rahasia ---
+.env
+*.token

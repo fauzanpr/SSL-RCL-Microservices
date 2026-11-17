@@ -1,0 +1,13 @@
+variant,mode,seed,train_sec,epochs,AC@1,AC@3,AC@5,Avg@5,n
+pretrain,FineLast,0,4.9,42,1.0,1.0,1.0,1.0,18
+pretrain,FineAll,0,144.5,10,1.0,1.0,1.0,1.0,18
+scratch,FineLast,0,5.9,64,1.0,1.0,1.0,1.0,18
+scratch,FineAll,0,216.6,10,1.0,1.0,1.0,1.0,18
+pretrain,FineLast,1,10.3,200,1.0,1.0,1.0,1.0,18
+pretrain,FineAll,1,210.0,14,1.0,1.0,1.0,1.0,18
+scratch,FineLast,1,5.3,64,1.0,1.0,1.0,1.0,18
+scratch,FineAll,1,229.9,16,1.0,1.0,1.0,1.0,18
+pretrain,FineLast,2,10.5,200,1.0,1.0,1.0,1.0,18
+pretrain,FineAll,2,411.3,27,1.0,1.0,1.0,1.0,18
+scratch,FineLast,2,4.3,36,1.0,1.0,1.0,1.0,18
+scratch,FineAll,2,420.8,25,1.0,1.0,1.0,1.0,18

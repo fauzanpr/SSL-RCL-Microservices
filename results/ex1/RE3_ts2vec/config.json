@@ -1,0 +1,16 @@
+{
+  "source": "RE3",
+  "model": "ts2vec",
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "n_iters": 600,
+  "pt_window": 540,
+  "pt_stride": 270,
+  "fineall_epochs": 30,
+  "no_scratch": false,
+  "device": "mps",
+  "pretrain_device": "cpu"
+}
