@@ -63,7 +63,8 @@ for src in args.sources:
 
     # 2) model: encoder pretrain + FineLast
     enc = TSEncoder(2 * K)
-    enc.load_state_dict(torch.load(ROOT / "checkpoints" / "ex1" / f"{src}_ts2vec_seed{args.seed}.pt"))
+    enc.load_state_dict(torch.load(ROOT / "checkpoints" / "ex1" / f"{src}_ts2vec_seed{args.seed}.pt",
+                                   map_location="cpu"))  # checkpoint disimpan dari MPS
     enc = enc.to(device).eval()
     res = train_finelast(enc, train, val, device, seed=args.seed)
     _, r_normal = evaluate_cases(res["encoder"], res["head"], test, device)
