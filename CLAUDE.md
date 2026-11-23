@@ -20,7 +20,8 @@ Konteks proyek untuk Claude Code. Setup environment ada di `README.md`. Semua pr
 - EX-1 TS2Vec selesai untuk RE1, RE2, dan RE3 (`results/ex1/`, `03_ex1_ringkasan.ipynb`). AC@1: RE1 ±0.92–0.95, RE2 ±0.86–0.89, dan RE3 1.0 (ceiling, n_test 18). Heuristik 0.81 / 0.80 / 0.67.
 - Diagnostik: kalau anomali dihapus, AC@1 ≈ acak, jadi tidak ada kebocoran.
 - Temuan penting: **pretrain ≈ scratch** in-domain, jadi SSL belum terbukti membantu. Bukti manfaat SSL harus datang dari eksperimen transfer (EX-2+).
-- Berikutnya: implementasi TimeMAE dan RUN di `src/ssl_rcl/models/` dengan antarmuka yang sama seperti `ts2vec.py` (encoder per service: `encoder(x[B, T, 2K], mask="all_true") -> [B, T, D]`, yang di-pool max pra/pasca injeksi oleh `finetune.service_features`; `run_ex1.py --model` perlu ditambah pilihannya). Paper ada di `reference/`.
+- TimeMAE sudah diimplementasikan (`models/timemae.py`, `run_ex1.py --model timemae`), tetapi EX-1-nya belum dijalankan penuh. Catatan: suku loss keragaman codeword (`--tm-gamma`) bukan dari paper, ditambahkan karena tokenizer kolaps ke 1 codeword tanpa itu. Patch 12 dipilih karena harus membagi `inject_offset` 300 dan T 540.
+- Berikutnya: RUN di `src/ssl_rcl/models/` dengan antarmuka yang sama seperti `ts2vec.py` (encoder per service: `encoder(x[B, T, 2K], mask="all_true") -> [B, T, D]`, yang di-pool max pra/pasca injeksi oleh `finetune.service_features`; `run_ex1.py --model` perlu ditambah pilihannya). Paper ada di `reference/`.
 
 ## Gotcha
 - Di Apple Silicon (MPS), pre-training TS2Vec harus di CPU karena memori bocor akibat panjang random crop yang berubah-ubah. Fine-tuning boleh di MPS.
