@@ -1,9 +1,10 @@
-"""Cek progress EX-1 yang dijalankan lewat scripts/launch_ex1.py.
+"""Cek progress EX-1 / EX-2 yang dijalankan lewat scripts/launch_ex1.py.
 
     python scripts/check_ex1.py                    # ringkasan sekali jalan
     python scripts/check_ex1.py --watch 30         # refresh tiap 30 detik (Ctrl+C untuk keluar)
     python scripts/check_ex1.py --tail 15          # plus 15 baris terakhir log RE yang sedang jalan
     python scripts/check_ex1.py --model ts2vec
+    python scripts/check_ex1.py --exp ex2          # pantau EX-2
 """
 
 import argparse
@@ -20,6 +21,7 @@ from _ex1_common import ROOT, log_path, pid_alive, read_status
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
 p = argparse.ArgumentParser()
+p.add_argument("--exp", default="ex1", choices=["ex1", "ex2"])
 p.add_argument("--model", default="timemae", choices=["ts2vec", "timemae"])
 p.add_argument("--watch", type=int, default=0, help="refresh tiap N detik")
 p.add_argument("--tail", type=int, default=0, help="tampilkan N baris terakhir log RE yang aktif")
@@ -27,6 +29,7 @@ args = p.parse_args()
 
 STEPS_PER_SEED = 5                                       # pre-training + (pretrain, scratch) x (FineLast, FineAll)
 RES_RE = re.compile(r"^\s+(pretrain|scratch)\s+(FineLast|FineAll)\s+seed (\d+): (.*)\((\d+)s\)")
+RES2_RE = re.compile(r"^\s+(transfer|indomain|scratch)\s+(\S+)\s+(FineLast|FineAll)\s*: (.*)\((\d+)s\)")
 ITER_RE = re.compile(r"iter\s+(\d+)/(\d+)\s+(.*)")
 
 
@@ -35,7 +38,7 @@ def fmt_td(sec):
     return f"{sec // 3600}j {sec % 3600 // 60:02d}m" if sec >= 3600 else f"{sec // 60}m {sec % 60:02d}s"
 
 
-def parse_log(path, n_seeds):
+def parse_log(path, total):
     """-> dict(frac, seed, stage, results, error)."""
     info = dict(frac=0.0, seed=None, stage="menunggu", results=[], error=None, pt=None)
     if not path.exists():
@@ -43,7 +46,11 @@ def parse_log(path, n_seeds):
     lines = path.read_text(encoding="utf-8", errors="replace").splitlines()
     done_steps, seed, stage, pt_frac = 0, None, "memuat data", 0.0
     for ln in lines:
-        if ln.startswith("=== seed"):
+        if ln.startswith("=== fraksi"):                 # EX-2
+            stage = ln.strip("= ").strip(); seed = re.search(r"seed (\d+)", ln)[1]
+        elif (m := RES2_RE.match(ln)):
+            done_steps += 1; info["results"].append((m[1], m[3], m[2], m[4].strip(), int(m[5])))
+        elif ln.startswith("=== seed"):
             seed = int(ln.split()[2]); stage = "pre-training"; pt_frac = 0.0
         elif (m := ITER_RE.search(ln)):
             pt_frac = int(m[1]) / int(m[2]); info["pt"] = f"iter {m[1]}/{m[2]}  {m[3].strip()}"
@@ -57,7 +64,7 @@ def parse_log(path, n_seeds):
     if info["error"]:
         info["error"] = "\n".join(lines[-12:])
     info["seed"], info["stage"] = seed, stage
-    info["frac"] = min((done_steps + pt_frac) / (STEPS_PER_SEED * n_seeds), 1.0)
+    info["frac"] = min((done_steps + pt_frac) / total, 1.0)
     if any("Ringkasan test" in ln for ln in lines):
         info["frac"], info["stage"] = 1.0, "selesai"
     return info
@@ -74,14 +81,17 @@ def gpu_line():
 
 
 def result_table(src, model):
-    d = ROOT / "results" / "ex1" / f"{src}_{model}"
+    d = ROOT / "results" / args.exp / f"{src}_{model}"
     f = d / "summary.csv"
     if not f.exists():
         return None
     s = pd.read_csv(f)
-    agg = s.groupby(["variant", "mode"])["AC@1"].agg(["mean", "std", "count"])
-    rows = [f"    {v:9s} {m:8s} AC@1 {r['mean']:.3f} ± {0 if pd.isna(r['std']) else r['std']:.3f}  (seed {int(r['count'])})"
-            for (v, m), r in agg.iterrows()]
+    keys = ["variant", "mode"] if args.exp == "ex1" else ["fraction", "mode", "variant", "source"]
+    agg = s.groupby(keys)["AC@1"].agg(["mean", "std", "count"])
+    rows = []
+    for k, r in agg.iterrows():
+        label = f"{k[0]:9s} {k[1]:8s}" if args.exp == "ex1" else f"frak {k[0]:<4g} {k[1]:8s} {k[2]:8s} {k[3]:3s}"
+        rows.append(f"    {label} AC@1 {r['mean']:.3f} ± {0 if pd.isna(r['std']) else r['std']:.3f}  (seed {int(r['count'])})")
     h = d / "heuristic_test.csv"
     if h.exists():
         hd = pd.read_csv(h)
@@ -90,10 +100,10 @@ def result_table(src, model):
 
 
 def show():
-    st = read_status(args.model)
-    print(f"=== EX-1 {args.model} | {datetime.now():%Y-%m-%d %H:%M:%S} ===")
+    st = read_status(args.model, args.exp)
+    print(f"=== {args.exp.upper()} {args.model} | {datetime.now():%Y-%m-%d %H:%M:%S} ===")
     if not st:
-        print("Belum pernah dijalankan. Mulai dengan: python scripts/launch_ex1.py"); return False
+        print("Belum pernah dijalankan. Mulai dengan: python scripts/launch_ex1.py --exp " + args.exp); return False
     state = st["state"]
     alive = pid_alive(st.get("worker_pid"))
     if state in ("running", "starting") and not alive:
@@ -108,7 +118,8 @@ def show():
         run = st["runs"].get(src)
         if not run:
             print(f"[{src}] menunggu"); continue
-        info = parse_log(log_path(src, args.model), len(st["seeds"]))
+        total = (st.get("total") or {}).get(src) or STEPS_PER_SEED * len(st["seeds"])
+        info = parse_log(log_path(src, args.model, args.exp), total)
         r_end = datetime.fromisoformat(run["finished"]) if run.get("finished") else datetime.now()
         el = (r_end - datetime.fromisoformat(run["started"])).total_seconds()
         bar = "#" * int(info["frac"] * 20) + "-" * (20 - int(info["frac"] * 20))
@@ -132,8 +143,8 @@ def show():
             print("    hasil sementara (test)" if run["state"] == "running" else "    hasil (test)")
             print(tbl)
     if args.tail and active:
-        print(f"\n--- {args.tail} baris terakhir logs/ex1_{active}_{args.model}.log ---")
-        lines = log_path(active, args.model).read_text(encoding="utf-8", errors="replace").splitlines()
+        print(f"\n--- {args.tail} baris terakhir logs/{args.exp}_{active}_{args.model}.log ---")
+        lines = log_path(active, args.model, args.exp).read_text(encoding="utf-8", errors="replace").splitlines()
         print("\n".join(lines[-args.tail:]))
     return state in ("running", "starting")
 

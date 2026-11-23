@@ -36,10 +36,11 @@ sys.path.insert(0, str(ROOT / "src"))
 from ssl_rcl.baseline import heuristic_table  # noqa: E402
 from ssl_rcl.data import CORE_METRICS, build_samples, stratified_split  # noqa: E402
 from ssl_rcl.finetune import predict_table, summarize_ranks, train_fineall, train_finelast  # noqa: E402
+from ssl_rcl.models.timemae import TimeMAEEncoder  # noqa: E402
 from ssl_rcl.models.ts2vec import TSEncoder  # noqa: E402
 
 ALL_RE = ["RE1", "RE2", "RE3"]
-ENCODERS = {"ts2vec": TSEncoder}   # TimeMAE/RUN ditambahkan di sini setelah diimplementasikan
+ENCODERS = {"ts2vec": TSEncoder, "timemae": TimeMAEEncoder}   # RUN ditambahkan di sini setelah diimplementasikan
 
 p = argparse.ArgumentParser()
 p.add_argument("--target", required=True, choices=ALL_RE)
@@ -66,7 +67,19 @@ if any(not 0 < f <= 1 for f in args.fractions):
 
 device = torch.device(args.device)
 K = len(CORE_METRICS)
-Encoder = ENCODERS[args.model]
+
+
+def encoder_for(re_name):
+    """Encoder kosong dengan arsitektur yang sama seperti saat pre-training di `re_name` (EX-1).
+
+    TimeMAE: hiperparameter arsitektur dibaca dari results/ex1/<RE>_timemae/config.json, karena checkpoint
+    hanya berisi bobot. Tanpa itu, `--tm-dim/--tm-depth/--tm-patch` yang non-default akan gagal dimuat.
+    """
+    if args.model == "ts2vec":
+        return TSEncoder(2 * K)
+    cfg_path = ROOT / "results" / "ex1" / f"{re_name}_timemae" / "config.json"
+    cfg = json.loads(cfg_path.read_text()) if cfg_path.exists() else {}
+    return TimeMAEEncoder(2 * K, cfg.get("tm_dim", 64), cfg.get("tm_patch", 12), cfg.get("tm_depth", 8))
 
 # Semua checkpoint dicek di awal supaya run panjang tidak gagal di tengah.
 needed = [(s, sd) for s in sources + ([] if args.no_indomain else [args.target]) for sd in args.seeds]
@@ -85,6 +98,10 @@ tr_idx, va_idx, te_idx = stratified_split(samples, seed=42)            # split t
 train_full = [samples[i] for i in tr_idx]
 val = [samples[i] for i in va_idx]
 test = [samples[i] for i in te_idx]
+if args.model == "timemae":
+    off, patch = samples[0]["inject_offset"], encoder_for(args.target).patch_size
+    if off % patch:
+        sys.exit(f"patch {patch} tidak membagi inject_offset {off}: patch melintasi batas pra/pasca-injeksi.")
 print(f"target {args.target}: train/val/test = {len(train_full)}/{len(val)}/{len(test)} | sumber {sources}"
       f" | device {device}")
 
@@ -105,7 +122,7 @@ def subsample_train(train, fraction, seed):
 
 
 def load_encoder(re_name, seed):
-    enc = Encoder(2 * K)
+    enc = encoder_for(re_name)
     # map_location: checkpoint EX-1 disimpan dari MPS
     enc.load_state_dict(torch.load(args.ckpt_dir / f"{re_name}_{args.model}_seed{seed}.pt", map_location="cpu"))
     return enc.to(device).eval()
@@ -119,7 +136,7 @@ def make_encoders(seed):
     if not args.no_scratch:
         def scratch():
             torch.manual_seed(seed)
-            return Encoder(2 * K).to(device).eval()
+            return encoder_for(args.target).to(device).eval()
         out.append(("scratch", "-", scratch))
     return out
 
