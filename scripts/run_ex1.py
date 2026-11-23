@@ -30,23 +30,38 @@ sys.path.insert(0, str(ROOT / "src"))
 from ssl_rcl.baseline import heuristic_table  # noqa: E402
 from ssl_rcl.data import CORE_METRICS, build_samples, make_pretrain_windows, stratified_split  # noqa: E402
 from ssl_rcl.finetune import predict_table, summarize_ranks, train_fineall, train_finelast  # noqa: E402
+from ssl_rcl.models.timemae import TimeMAEEncoder, pretrain_timemae  # noqa: E402
 from ssl_rcl.models.ts2vec import TSEncoder, pretrain_ts2vec  # noqa: E402
 
 p = argparse.ArgumentParser()
 p.add_argument("--source", default="RE1")
-p.add_argument("--model", default="ts2vec", choices=["ts2vec"])
+p.add_argument("--model", default="ts2vec", choices=["ts2vec", "timemae"])
 p.add_argument("--seeds", nargs="+", type=int, default=[0, 1, 2])
-p.add_argument("--n-iters", type=int, default=600, help="iterasi pre-training (default kode resmi TS2Vec)")
+p.add_argument("--n-iters", type=int, default=None,
+               help="iterasi pre-training (default: ts2vec 600 = kode resmi, timemae 3000)")
 p.add_argument("--pt-window", type=int, default=540)
 p.add_argument("--pt-stride", type=int, default=270)
 p.add_argument("--fineall-epochs", type=int, default=30)
 p.add_argument("--no-scratch", action="store_true", help="lewati kontrol encoder acak")
 p.add_argument("--device", default="mps" if torch.backends.mps.is_available() else
                ("cuda" if torch.cuda.is_available() else "cpu"))
-p.add_argument("--pretrain-device", default="cpu",
-               help="Pre-training di CPU: random crop TS2Vec membuat panjang input berubah tiap iterasi, "
-                    "dan MPS meng-compile/cache graph per bentuk input sehingga memori membengkak.")
+p.add_argument("--pretrain-device", default="auto",
+               help="auto = CPU untuk ts2vec di MPS (random crop TS2Vec membuat panjang input berubah tiap "
+                    "iterasi, dan MPS meng-cache graph per bentuk input sehingga memori membengkak); "
+                    "selain itu sama dengan --device.")
+# --- hiperparameter TimeMAE (default mengikuti paper; patch 12 membagi inject_offset 300 dan T 540)
+p.add_argument("--tm-patch", type=int, default=12)
+p.add_argument("--tm-dim", type=int, default=64)
+p.add_argument("--tm-depth", type=int, default=8)
+p.add_argument("--tm-vocab", type=int, default=128)
+p.add_argument("--tm-mask-ratio", type=float, default=0.6)
+p.add_argument("--tm-batch", type=int, default=64)
+p.add_argument("--tm-gamma", type=float, default=5.0, help="bobot loss keragaman codeword (bukan dari paper)")
 args = p.parse_args()
+if args.n_iters is None:
+    args.n_iters = 600 if args.model == "ts2vec" else 3000
+if args.pretrain_device == "auto":
+    args.pretrain_device = "cpu" if (args.model == "ts2vec" and args.device == "mps") else args.device
 
 device = torch.device(args.device)
 pt_device = torch.device(args.pretrain_device)
@@ -72,6 +87,21 @@ print(f"{args.source}: train/val/test = {len(train)}/{len(val)}/{len(test)} | wi
 pred_rows, summary_rows, hist_rows, pt_logs = [], [], [], []
 
 
+def pretrain(windows, dev, seed):
+    if args.model == "ts2vec":
+        return pretrain_ts2vec(windows, 2 * K, dev, n_iters=args.n_iters, seed=seed)
+    return pretrain_timemae(windows, 2 * K, dev, n_iters=args.n_iters, batch_size=args.tm_batch,
+                            output_dims=args.tm_dim, patch_size=args.tm_patch, depth=args.tm_depth,
+                            vocab_size=args.tm_vocab, mask_ratio=args.tm_mask_ratio, gamma=args.tm_gamma, seed=seed)
+
+
+def new_encoder():
+    """Encoder acak (kontrol scratch) dengan arsitektur yang sama seperti hasil pre-training."""
+    if args.model == "ts2vec":
+        return TSEncoder(2 * K)
+    return TimeMAEEncoder(2 * K, args.tm_dim, args.tm_patch, args.tm_depth)
+
+
 def record(tag_variant, mode, seed, result, secs):
     pt = predict_table(result["encoder"], result["head"], test, device)
     pt["variant"], pt["mode"], pt["seed"] = tag_variant, mode, seed
@@ -87,7 +117,7 @@ def record(tag_variant, mode, seed, result, secs):
 for seed in args.seeds:
     print(f"\n=== seed {seed} ===")
     t = time.time()
-    enc, log = pretrain_ts2vec(pt_windows, 2 * K, pt_device, n_iters=args.n_iters, seed=seed)
+    enc, log = pretrain(pt_windows, pt_device, seed)
     enc = enc.to(device)
     print(f"  pre-training selesai ({time.time() - t:.0f}s)")
     torch.save(enc.state_dict(), ck_dir / f"{args.source}_{args.model}_seed{seed}.pt")
@@ -96,7 +126,7 @@ for seed in args.seeds:
     torch.manual_seed(seed)
     encoders = {"pretrain": enc}
     if not args.no_scratch:
-        encoders["scratch"] = TSEncoder(2 * K).to(device).eval()
+        encoders["scratch"] = new_encoder().to(device).eval()
 
     for variant, e in encoders.items():
         t = time.time(); r = train_finelast(e, train, val, device, seed=seed); record(variant, "FineLast", seed, r, time.time() - t)

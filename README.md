@@ -63,14 +63,23 @@ Di WhatsApp, kirim sebagai **Dokumen**, bukan foto/media, supaya file tidak diub
 
 ```bash
 python scripts/run_ex1.py --source RE1   # juga RE2, RE3; hasil ke results/ex1/<S>_ts2vec/
+python scripts/run_ex1.py --source RE1 --model timemae   # hasil ke results/ex1/<S>_timemae/ (CUDA dipilih otomatis)
 python scripts/diagnose_prior.py         # uji prior / anomali dihapus
 ```
+
+### Menjalankan di background (RE1 → RE2 → RE3, 3 seed)
+```bash
+python scripts/launch_ex1.py                    # timemae; tetap jalan walau terminal ditutup
+python scripts/check_ex1.py --watch 30          # pantau progress, GPU, dan hasil sementara
+python scripts/launch_ex1.py --stop             # hentikan
+```
+Log di `logs/ex1_<RE>_<model>.log`, status di `logs/ex1_<model>_status.json`. Argumen setelah `--` diteruskan ke `run_ex1.py`, misalnya `-- --n-iters 5000`.
 
 ## Struktur
 ```
 src/ssl_rcl/        data.py (loader + skema K=5), baseline.py (heuristik |z|), finetune.py (FineLast/FineAll)
-src/ssl_rcl/models/ ts2vec.py  (TimeMAE, RUN: belum)
-scripts/            download_dataset.py, prepare_data.py, run_ex1.py, diagnose_prior.py
+src/ssl_rcl/models/ ts2vec.py, timemae.py  (RUN: belum)
+scripts/            download_dataset.py, prepare_data.py, run_ex1.py, diagnose_prior.py, launch_ex1.py + check_ex1.py (background)
 analysis/           metric_schema_audit.py -> report/metric_audit/
 results/ex1/        summary.csv, predictions.csv, history.csv per RE
 reference/          paper TS2Vec, TimeMAE, RUN
