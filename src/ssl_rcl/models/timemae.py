@@ -61,6 +61,8 @@ class TimeMAEEncoder(nn.Module):
         pad = (-x.size(1)) % self.patch_size
         if pad:
             x = F.pad(x, (0, 0, 0, pad))
+        if x.size(1) // self.patch_size > self.max_patches:
+            raise ValueError(f"{x.size(1) // self.patch_size} patch melebihi max_patches={self.max_patches}")
         return self.patch_embed(x.transpose(1, 2)).transpose(1, 2)
 
     def encode(self, z, keep_idx=None):

@@ -75,6 +75,11 @@ cache = ROOT / "cache"
 ft_samples = build_samples(ROOT / "dataset", [args.source], cache_dir=cache, verbose=False)
 # Seluruh rekaman (untuk pre-training) tidak di-cache ke disk; cepat dihitung ulang.
 full_samples = build_samples(ROOT / "dataset", [args.source], pre=None, post=None, cache_dir=None, verbose=False)
+if args.model == "timemae":
+    off = ft_samples[0]["inject_offset"]
+    if off % args.tm_patch or args.pt_window % args.tm_patch:
+        sys.exit(f"--tm-patch {args.tm_patch} harus membagi inject_offset ({off}) dan --pt-window ({args.pt_window}); "
+                 f"kalau tidak, patch melintasi batas pra/pasca-injeksi.")
 tr_idx, va_idx, te_idx = stratified_split(ft_samples, seed=42)       # split tetap, sama untuk semua seed
 train = [ft_samples[i] for i in tr_idx]; val = [ft_samples[i] for i in va_idx]; test = [ft_samples[i] for i in te_idx]
 train_names = {s["name"] for s in train}

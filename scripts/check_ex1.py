@@ -52,7 +52,7 @@ def parse_log(path, n_seeds):
         elif (m := RES_RE.match(ln)):
             done_steps += 1; info["results"].append((m[1], m[2], int(m[3]), m[4].strip(), int(m[5])))
             stage = f"fine-tuning ({m[1]} {m[2]} selesai)"
-        elif "Traceback" in ln or "Error" in ln.split(":")[0]:
+        elif ln.startswith("Traceback") or re.match(r"^\w*(Error|Exception)", ln):
             info["error"] = True
     if info["error"]:
         info["error"] = "\n".join(lines[-12:])
@@ -112,8 +112,10 @@ def show():
         r_end = datetime.fromisoformat(run["finished"]) if run.get("finished") else datetime.now()
         el = (r_end - datetime.fromisoformat(run["started"])).total_seconds()
         bar = "#" * int(info["frac"] * 20) + "-" * (20 - int(info["frac"] * 20))
+        if run["state"] == "running" and not alive:
+            run = dict(run, state="stopped")            # worker mati tapi status belum sempat diperbarui
         tag = {"running": "JALAN", "done": "SELESAI", "failed": f"GAGAL (exit {run['exit_code']})",
-               "stopped": "DIHENTIKAN"}[run["state"]]
+               "stopped": "TERHENTI/DIHENTIKAN"}[run["state"]]
         eta = ""
         if run["state"] == "running" and info["frac"] > 0.03:
             eta = f" | sisa ±{fmt_td(el * (1 - info['frac']) / info['frac'])} (kasar)"
