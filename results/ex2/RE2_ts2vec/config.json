@@ -1,0 +1,27 @@
+{
+  "target": "RE2",
+  "sources": [
+    "RE1",
+    "RE3"
+  ],
+  "model": "ts2vec",
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "fractions": [
+    0.25,
+    0.5
+  ],
+  "modes": [
+    "FineAll"
+  ],
+  "no_indomain": false,
+  "no_scratch": false,
+  "fineall_epochs": 30,
+  "ckpt_dir": "/home/ojan/AI Labs/SSL-RCL-Microservices/checkpoints/ex1",
+  "out_dir": null,
+  "resume": true,
+  "device": "cpu"
+}

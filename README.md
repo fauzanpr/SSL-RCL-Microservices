@@ -74,14 +74,28 @@ python scripts/check_ex1.py --watch 30          # pantau progress, GPU, dan hasi
 python scripts/launch_ex1.py --stop             # hentikan
 ```
 Log di `logs/ex1_<RE>_<model>.log`, status di `logs/ex1_<model>_status.json`. Argumen setelah `--` diteruskan ke `run_ex1.py`, misalnya `-- --n-iters 5000`.
+## EX-2 (transfer lintas RE)
+
+Memakai checkpoint EX-1 sebagai encoder sumber, jadi tidak ada pre-training ulang. Script berjalan per target dan membandingkan varian `transfer` (encoder dari RE lain), `indomain` (encoder dari target sendiri), dan `scratch` (encoder acak) pada split dan subset label yang sama.
+
+```bash
+python scripts/run_ex2.py --target RE2                                   # sumber: RE1 dan RE3
+python scripts/run_ex2.py --target RE2 --modes FineLast --fractions 0.1 0.25 0.5 1.0
+python scripts/run_ex2.py --target RE2 --modes FineAll --resume          # lanjutkan run yang terhenti
+```
+
+`--fractions` men-subsample split train target (terstratifikasi, minimal 1 kasus per root service) untuk skenario label sedikit, sedangkan val dan test tetap penuh. Hasil disimpan di `results/ex2/<target>_ts2vec/`. RE3 sebagai target sudah mencapai ceiling (AC@1 ≈ 1.0 bahkan untuk scratch), jadi kurang informatif.
 
 ## Struktur
 ```
 src/ssl_rcl/        data.py (loader + skema K=5), baseline.py (heuristik |z|), finetune.py (FineLast/FineAll)
 src/ssl_rcl/models/ ts2vec.py, timemae.py  (RUN: belum)
 scripts/            download_dataset.py, prepare_data.py, run_ex1.py, diagnose_prior.py, launch_ex1.py + check_ex1.py (background)
+src/ssl_rcl/models/ ts2vec.py  (TimeMAE, RUN: belum)
+scripts/            download_dataset.py, prepare_data.py, run_ex1.py, run_ex2.py, diagnose_prior.py
 analysis/           metric_schema_audit.py -> report/metric_audit/
 results/ex1/        summary.csv, predictions.csv, history.csv per RE
+results/ex2/        idem, per target (kolom tambahan: variant, source, fraction)
 reference/          paper TS2Vec, TimeMAE, RUN
 0x_*.ipynb          preprocessing+baseline, EX-1 per RE, ringkasan
 ```

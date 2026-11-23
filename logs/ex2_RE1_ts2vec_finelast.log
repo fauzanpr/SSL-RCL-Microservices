@@ -1,0 +1,96 @@
+target RE1: train/val/test = 223/75/75 | sumber ['RE2', 'RE3'] | device cpu
+
+=== fraksi 0.1 (n_train 28), seed 0 ===
+  transfer RE2 FineLast: AC@1=0.867 AC@3=0.947 AC@5=1.000 Avg@5=0.949 (20s)
+  transfer RE3 FineLast: AC@1=0.907 AC@3=0.987 AC@5=1.000 Avg@5=0.965 (19s)
+  indomain RE1 FineLast: AC@1=0.893 AC@3=0.973 AC@5=1.000 Avg@5=0.963 (19s)
+  scratch  -   FineLast: AC@1=0.840 AC@3=0.960 AC@5=1.000 Avg@5=0.949 (19s)
+
+=== fraksi 0.1 (n_train 28), seed 1 ===
+  transfer RE2 FineLast: AC@1=0.853 AC@3=0.960 AC@5=1.000 Avg@5=0.947 (20s)
+  transfer RE3 FineLast: AC@1=0.867 AC@3=0.960 AC@5=0.987 Avg@5=0.947 (20s)
+  indomain RE1 FineLast: AC@1=0.880 AC@3=0.987 AC@5=1.000 Avg@5=0.968 (20s)
+  scratch  -   FineLast: AC@1=0.867 AC@3=0.960 AC@5=1.000 Avg@5=0.955 (20s)
+
+=== fraksi 0.1 (n_train 28), seed 2 ===
+  transfer RE2 FineLast: AC@1=0.867 AC@3=0.973 AC@5=1.000 Avg@5=0.957 (20s)
+  transfer RE3 FineLast: AC@1=0.893 AC@3=0.973 AC@5=1.000 Avg@5=0.960 (22s)
+  indomain RE1 FineLast: AC@1=0.907 AC@3=0.987 AC@5=1.000 Avg@5=0.968 (23s)
+  scratch  -   FineLast: AC@1=0.893 AC@3=0.960 AC@5=1.000 Avg@5=0.960 (20s)
+
+=== fraksi 0.25 (n_train 60), seed 0 ===
+  transfer RE2 FineLast: AC@1=0.880 AC@3=1.000 AC@5=1.000 Avg@5=0.963 (30s)
+  transfer RE3 FineLast: AC@1=0.893 AC@3=0.987 AC@5=1.000 Avg@5=0.963 (29s)
+  indomain RE1 FineLast: AC@1=0.880 AC@3=0.973 AC@5=1.000 Avg@5=0.960 (29s)
+  scratch  -   FineLast: AC@1=0.893 AC@3=0.960 AC@5=1.000 Avg@5=0.960 (29s)
+
+=== fraksi 0.25 (n_train 60), seed 1 ===
+  transfer RE2 FineLast: AC@1=0.880 AC@3=0.960 AC@5=1.000 Avg@5=0.955 (29s)
+  transfer RE3 FineLast: AC@1=0.907 AC@3=0.960 AC@5=1.000 Avg@5=0.963 (29s)
+  indomain RE1 FineLast: AC@1=0.907 AC@3=0.987 AC@5=1.000 Avg@5=0.971 (29s)
+  scratch  -   FineLast: AC@1=0.920 AC@3=0.973 AC@5=1.000 Avg@5=0.973 (29s)
+
+=== fraksi 0.25 (n_train 60), seed 2 ===
+  transfer RE2 FineLast: AC@1=0.907 AC@3=0.947 AC@5=1.000 Avg@5=0.952 (29s)
+  transfer RE3 FineLast: AC@1=0.907 AC@3=0.947 AC@5=0.987 Avg@5=0.952 (30s)
+  indomain RE1 FineLast: AC@1=0.920 AC@3=0.987 AC@5=1.000 Avg@5=0.965 (29s)
+  scratch  -   FineLast: AC@1=0.907 AC@3=0.960 AC@5=1.000 Avg@5=0.965 (29s)
+
+=== fraksi 0.5 (n_train 118), seed 0 ===
+  transfer RE2 FineLast: AC@1=0.880 AC@3=1.000 AC@5=1.000 Avg@5=0.965 (42s)
+  transfer RE3 FineLast: AC@1=0.893 AC@3=1.000 AC@5=1.000 Avg@5=0.971 (42s)
+  indomain RE1 FineLast: AC@1=0.893 AC@3=1.000 AC@5=1.000 Avg@5=0.968 (42s)
+  scratch  -   FineLast: AC@1=0.907 AC@3=1.000 AC@5=1.000 Avg@5=0.976 (42s)
+
+=== fraksi 0.5 (n_train 118), seed 1 ===
+  transfer RE2 FineLast: AC@1=0.893 AC@3=0.973 AC@5=1.000 Avg@5=0.963 (42s)
+  transfer RE3 FineLast: AC@1=0.907 AC@3=0.960 AC@5=0.987 Avg@5=0.957 (42s)
+  indomain RE1 FineLast: AC@1=0.907 AC@3=1.000 AC@5=1.000 Avg@5=0.973 (42s)
+  scratch  -   FineLast: AC@1=0.907 AC@3=0.987 AC@5=1.000 Avg@5=0.973 (42s)
+
+=== fraksi 0.5 (n_train 118), seed 2 ===
+  transfer RE2 FineLast: AC@1=0.933 AC@3=0.973 AC@5=1.000 Avg@5=0.973 (42s)
+  transfer RE3 FineLast: AC@1=0.893 AC@3=0.987 AC@5=1.000 Avg@5=0.968 (42s)
+  indomain RE1 FineLast: AC@1=0.933 AC@3=0.987 AC@5=1.000 Avg@5=0.973 (42s)
+  scratch  -   FineLast: AC@1=0.920 AC@3=0.987 AC@5=1.000 Avg@5=0.973 (42s)
+
+=== fraksi 1 (n_train 223), seed 0 ===
+  transfer RE2 FineLast: AC@1=0.920 AC@3=0.987 AC@5=1.000 Avg@5=0.976 (65s)
+  transfer RE3 FineLast: AC@1=0.907 AC@3=1.000 AC@5=1.000 Avg@5=0.973 (65s)
+  indomain RE1 FineLast: AC@1=0.907 AC@3=0.987 AC@5=1.000 Avg@5=0.965 (64s)
+  scratch  -   FineLast: AC@1=0.933 AC@3=1.000 AC@5=1.000 Avg@5=0.981 (65s)
+
+=== fraksi 1 (n_train 223), seed 1 ===
+  transfer RE2 FineLast: AC@1=0.907 AC@3=0.973 AC@5=1.000 Avg@5=0.968 (65s)
+  transfer RE3 FineLast: AC@1=0.907 AC@3=0.987 AC@5=1.000 Avg@5=0.968 (65s)
+  indomain RE1 FineLast: AC@1=0.920 AC@3=1.000 AC@5=1.000 Avg@5=0.979 (64s)
+  scratch  -   FineLast: AC@1=0.920 AC@3=0.987 AC@5=1.000 Avg@5=0.979 (64s)
+
+=== fraksi 1 (n_train 223), seed 2 ===
+  transfer RE2 FineLast: AC@1=0.933 AC@3=1.000 AC@5=1.000 Avg@5=0.981 (64s)
+  transfer RE3 FineLast: AC@1=0.920 AC@3=0.987 AC@5=1.000 Avg@5=0.971 (64s)
+  indomain RE1 FineLast: AC@1=0.947 AC@3=0.987 AC@5=1.000 Avg@5=0.979 (64s)
+  scratch  -   FineLast: AC@1=0.920 AC@3=0.987 AC@5=1.000 Avg@5=0.976 (64s)
+
+== Ringkasan test RE1 (mean ± std antar seed) ==
+                                    AC@1          AC@3         Avg@5       
+                                    mean    std   mean    std   mean    std
+fraction mode     variant  source                                          
+0.10     FineLast indomain RE1     0.893  0.013  0.982  0.008  0.966  0.003
+                  scratch  -       0.867  0.027  0.960  0.000  0.955  0.005
+                  transfer RE2     0.862  0.008  0.960  0.013  0.951  0.006
+                           RE3     0.889  0.020  0.973  0.013  0.957  0.010
+0.25     FineLast indomain RE1     0.902  0.020  0.982  0.008  0.965  0.005
+                  scratch  -       0.907  0.013  0.964  0.008  0.966  0.007
+                  transfer RE2     0.889  0.015  0.969  0.028  0.956  0.006
+                           RE3     0.902  0.008  0.964  0.020  0.959  0.006
+0.50     FineLast indomain RE1     0.911  0.020  0.996  0.008  0.972  0.003
+                  scratch  -       0.911  0.008  0.991  0.008  0.974  0.002
+                  transfer RE2     0.902  0.028  0.982  0.015  0.967  0.006
+                           RE3     0.898  0.008  0.982  0.020  0.965  0.007
+1.00     FineLast indomain RE1     0.924  0.020  0.991  0.008  0.974  0.008
+                  scratch  -       0.924  0.008  0.991  0.008  0.979  0.003
+                  transfer RE2     0.920  0.013  0.987  0.013  0.975  0.007
+                           RE3     0.911  0.008  0.991  0.008  0.971  0.003
+
+Heuristik (test): {'AC@1': 0.813, 'AC@3': 0.96, 'AC@5': 0.987, 'Avg@5': 0.923, 'n': 75}
