@@ -25,13 +25,16 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 from ssl_rcl.data import CORE_METRICS, build_samples, stratified_split  # noqa: E402
 from ssl_rcl.finetune import evaluate_cases, summarize_ranks, train_finelast  # noqa: E402
+from ssl_rcl.models.timemae import TimeMAEEncoder  # noqa: E402
 from ssl_rcl.models.ts2vec import TSEncoder  # noqa: E402
 
 p = argparse.ArgumentParser()
 p.add_argument("--sources", nargs="+", default=["RE1", "RE2", "RE3"])
 p.add_argument("--seed", type=int, default=0)
+p.add_argument("--model", default="ts2vec", choices=["ts2vec", "timemae"],
+               help="timemae: pakai hiperparameter default run_ex1.py (dim 64, patch 12, depth 8)")
 args = p.parse_args()
-device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
+device = torch.device("mps" if torch.backends.mps.is_available() else ("cuda" if torch.cuda.is_available() else "cpu"))
 K = len(CORE_METRICS)
 
 
@@ -62,8 +65,8 @@ for src in args.sources:
             prior_hit[k].append(np.clip((k - g) / (t + 1), 0, 1))
 
     # 2) model: encoder pretrain + FineLast
-    enc = TSEncoder(2 * K)
-    enc.load_state_dict(torch.load(ROOT / "checkpoints" / "ex1" / f"{src}_ts2vec_seed{args.seed}.pt",
+    enc = TSEncoder(2 * K) if args.model == "ts2vec" else TimeMAEEncoder(2 * K)
+    enc.load_state_dict(torch.load(ROOT / "checkpoints" / "ex1" / f"{src}_{args.model}_seed{args.seed}.pt",
                                    map_location="cpu"))  # checkpoint disimpan dari MPS
     enc = enc.to(device).eval()
     res = train_finelast(enc, train, val, device, seed=args.seed)
@@ -83,4 +86,4 @@ for src in args.sources:
 
 out = pd.DataFrame(rows).round(3)
 print(out.to_string(index=False))
-out.to_csv(ROOT / "results" / "ex1" / "diagnose_prior.csv", index=False)
+out.to_csv(ROOT / "results" / "ex1" / ("diagnose_prior.csv" if args.model == "ts2vec" else f"diagnose_prior_{args.model}.csv"), index=False)

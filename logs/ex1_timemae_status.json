@@ -1,0 +1,42 @@
+{
+  "state": "finished",
+  "model": "timemae",
+  "sources": [
+    "RE1",
+    "RE2",
+    "RE3"
+  ],
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "extra": [],
+  "started": "2026-11-23T19:31:56",
+  "worker_pid": 5892,
+  "current": null,
+  "runs": {
+    "RE1": {
+      "state": "done",
+      "started": "2026-11-23T19:31:56",
+      "child_pid": 10852,
+      "exit_code": 0,
+      "finished": "2026-11-23T19:45:07"
+    },
+    "RE2": {
+      "state": "done",
+      "started": "2026-11-23T19:45:07",
+      "child_pid": 2568,
+      "exit_code": 0,
+      "finished": "2026-11-23T19:56:35"
+    },
+    "RE3": {
+      "state": "done",
+      "started": "2026-11-23T19:56:35",
+      "child_pid": 8484,
+      "exit_code": 0,
+      "finished": "2026-11-23T20:06:28"
+    }
+  },
+  "finished": "2026-11-23T20:06:28"
+}
