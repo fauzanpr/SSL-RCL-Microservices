@@ -20,7 +20,8 @@ Konteks proyek untuk Claude Code. Setup environment ada di `README.md`. Semua pr
 - EX-1 TS2Vec selesai untuk RE1, RE2, dan RE3 (`results/ex1/`, `03_ex1_ringkasan.ipynb`). AC@1: RE1 ±0.92–0.95, RE2 ±0.86–0.89, dan RE3 1.0 (ceiling, n_test 18). Heuristik 0.81 / 0.80 / 0.67.
 - Diagnostik: kalau anomali dihapus, AC@1 ≈ acak, jadi tidak ada kebocoran.
 - Temuan penting: **pretrain ≈ scratch** in-domain, jadi SSL belum terbukti membantu. Bukti manfaat SSL harus datang dari eksperimen transfer (EX-2+).
-- TimeMAE sudah diimplementasikan (`models/timemae.py`, `run_ex1.py --model timemae`), tetapi EX-1-nya belum dijalankan penuh. Catatan: suku loss keragaman codeword (`--tm-gamma`) bukan dari paper, ditambahkan karena tokenizer kolaps ke 1 codeword tanpa itu. Patch 12 dipilih karena harus membagi `inject_offset` 300 dan T 540.
+- EX-1 TimeMAE selesai (`results/ex1/*_timemae/`, 3 seed). AC@1 pretrain vs scratch (FineLast/FineAll): RE1 0.916/0.929 vs 0.902/0.916, RE2 0.867/0.874 vs 0.852/0.852, RE3 0.963/1.0 vs 0.981/1.0. Sama seperti TS2Vec: pretrain ≈ scratch in-domain. Catatan: suku loss keragaman codeword (`--tm-gamma`) bukan dari paper, ditambahkan karena tokenizer kolaps ke 1 codeword tanpa itu. Patch 12 harus membagi `inject_offset` 300 dan T 540.
+- EX-2 TS2Vec ada (`run_ex2.py`, `report/ex2_ts2vec.md`). `run_ex2.py --model timemae` sudah didukung; EX-2 TimeMAE belum dijalankan. Varian ± PCA belum ada.
 - Berikutnya: RUN di `src/ssl_rcl/models/` dengan antarmuka yang sama seperti `ts2vec.py` (encoder per service: `encoder(x[B, T, 2K], mask="all_true") -> [B, T, D]`, yang di-pool max pra/pasca injeksi oleh `finetune.service_features`; `run_ex1.py --model` perlu ditambah pilihannya). Paper ada di `reference/`.
 
 ## Gotcha
