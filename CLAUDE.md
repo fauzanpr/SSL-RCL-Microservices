@@ -21,8 +21,9 @@ Konteks proyek untuk Claude Code. Setup environment ada di `README.md`. Semua pr
 - Diagnostik: kalau anomali dihapus, AC@1 ≈ acak, jadi tidak ada kebocoran.
 - Temuan penting: **pretrain ≈ scratch** in-domain, jadi SSL belum terbukti membantu. Bukti manfaat SSL harus datang dari eksperimen transfer (EX-2+).
 - EX-1 TimeMAE selesai (`results/ex1/*_timemae/`, 3 seed). AC@1 pretrain vs scratch (FineLast/FineAll): RE1 0.916/0.929 vs 0.902/0.916, RE2 0.867/0.874 vs 0.852/0.852, RE3 0.963/1.0 vs 0.981/1.0. Sama seperti TS2Vec: pretrain ≈ scratch in-domain. Catatan: suku loss keragaman codeword (`--tm-gamma`) bukan dari paper, ditambahkan karena tokenizer kolaps ke 1 codeword tanpa itu. Patch 12 harus membagi `inject_offset` 300 dan T 540.
-- EX-2 TS2Vec ada (`run_ex2.py`, `report/ex2_ts2vec.md`). `run_ex2.py --model timemae` sudah didukung; EX-2 TimeMAE belum dijalankan. Varian ± PCA belum ada.
-- Berikutnya: RUN di `src/ssl_rcl/models/` dengan antarmuka yang sama seperti `ts2vec.py` (encoder per service: `encoder(x[B, T, 2K], mask="all_true") -> [B, T, D]`, yang di-pool max pra/pasca injeksi oleh `finetune.service_features`; `run_ex1.py --model` perlu ditambah pilihannya). Paper ada di `reference/`.
+- EX-1 RUN selesai (`results/ex1/*_run/`, 3 seed, `src/ssl_rcl/models/run.py`). Yang diimplementasikan hanya tahap pre-training RUN (backbone DLinear kausal w=32 + kontras tanpa negatif ala SimSiam); Granger causal discovery dan PageRank tidak dipakai. Masking timestamp ditambahkan sebagai pembeda konteks antar view (tidak ada di paper). AC@1 pretrain vs scratch (FineLast/FineAll): RE1 0.911/0.929 vs 0.911/0.924, RE2 0.874/0.867 vs 0.867/0.859, RE3 1.0/1.0 vs 0.963/0.981. Lagi-lagi pretrain ≈ scratch in-domain (selisih di dalam SD).
+- EX-2 TS2Vec ada (`run_ex2.py`, `report/ex2_ts2vec.md`). `run_ex2.py --model timemae` dan `--model run` sudah didukung; EX-2 TimeMAE dan RUN belum dijalankan. Varian ± PCA belum ada.
+- Berikutnya: EX-2 (transfer) untuk TimeMAE dan RUN, lalu varian ± PCA. Antarmuka encoder baru: `encoder(x[B, T, 2K], mask="all_true") -> [B, T, D]` dengan atribut `output_dims`.
 
 ## Gotcha
 - Di Apple Silicon (MPS), pre-training TS2Vec harus di CPU karena memori bocor akibat panjang random crop yang berubah-ubah. Fine-tuning boleh di MPS.

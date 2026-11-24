@@ -1,0 +1,94 @@
+# 2026-11-25T02:30:47  C:\Users\edy\AppData\Local\Programs\Python\Python310\python.exe -u C:\Users\edy\vsc-projects\SSL-RCL-Microservices\scripts\run_ex1.py --source RE1 --model run --seeds 0 1 2
+RE1: train/val/test = 223/75/75 | window pre-training (14350, 540, 10) | device cuda
+
+=== seed 0 ===
+  iter   100/2000  loss -0.7988  std-repr 0.091 (sehat ~0.125, 0 = kolaps)  (3s)
+  iter   200/2000  loss -0.9581  std-repr 0.086 (sehat ~0.125, 0 = kolaps)  (4s)
+  iter   300/2000  loss -0.9588  std-repr 0.082 (sehat ~0.125, 0 = kolaps)  (4s)
+  iter   400/2000  loss -0.9527  std-repr 0.079 (sehat ~0.125, 0 = kolaps)  (5s)
+  iter   500/2000  loss -0.9576  std-repr 0.075 (sehat ~0.125, 0 = kolaps)  (6s)
+  iter   600/2000  loss -0.9610  std-repr 0.072 (sehat ~0.125, 0 = kolaps)  (7s)
+  iter   700/2000  loss -0.9626  std-repr 0.070 (sehat ~0.125, 0 = kolaps)  (8s)
+  iter   800/2000  loss -0.9641  std-repr 0.068 (sehat ~0.125, 0 = kolaps)  (9s)
+  iter   900/2000  loss -0.9653  std-repr 0.068 (sehat ~0.125, 0 = kolaps)  (10s)
+  iter  1000/2000  loss -0.9650  std-repr 0.067 (sehat ~0.125, 0 = kolaps)  (11s)
+  iter  1100/2000  loss -0.9655  std-repr 0.067 (sehat ~0.125, 0 = kolaps)  (12s)
+  iter  1200/2000  loss -0.9659  std-repr 0.067 (sehat ~0.125, 0 = kolaps)  (13s)
+  iter  1300/2000  loss -0.9646  std-repr 0.067 (sehat ~0.125, 0 = kolaps)  (14s)
+  iter  1400/2000  loss -0.9675  std-repr 0.065 (sehat ~0.125, 0 = kolaps)  (15s)
+  iter  1500/2000  loss -0.9674  std-repr 0.064 (sehat ~0.125, 0 = kolaps)  (16s)
+  iter  1600/2000  loss -0.9677  std-repr 0.063 (sehat ~0.125, 0 = kolaps)  (17s)
+  iter  1700/2000  loss -0.9690  std-repr 0.062 (sehat ~0.125, 0 = kolaps)  (18s)
+  iter  1800/2000  loss -0.9693  std-repr 0.062 (sehat ~0.125, 0 = kolaps)  (19s)
+  iter  1900/2000  loss -0.9701  std-repr 0.063 (sehat ~0.125, 0 = kolaps)  (20s)
+  iter  2000/2000  loss -0.9694  std-repr 0.062 (sehat ~0.125, 0 = kolaps)  (21s)
+  pre-training selesai (22s)
+  pretrain  FineLast seed 0: AC@1=0.920 AC@3=1.000 AC@5=1.000 Avg@5=0.976 (3s)
+  pretrain  FineAll  seed 0: AC@1=0.920 AC@3=1.000 AC@5=1.000 Avg@5=0.981 (12s)
+  scratch   FineLast seed 0: AC@1=0.920 AC@3=0.973 AC@5=1.000 Avg@5=0.971 (2s)
+  scratch   FineAll  seed 0: AC@1=0.920 AC@3=0.973 AC@5=1.000 Avg@5=0.973 (10s)
+
+=== seed 1 ===
+  iter   100/2000  loss -0.7625  std-repr 0.097 (sehat ~0.125, 0 = kolaps)  (1s)
+  iter   200/2000  loss -0.9466  std-repr 0.091 (sehat ~0.125, 0 = kolaps)  (2s)
+  iter   300/2000  loss -0.9501  std-repr 0.086 (sehat ~0.125, 0 = kolaps)  (3s)
+  iter   400/2000  loss -0.9507  std-repr 0.083 (sehat ~0.125, 0 = kolaps)  (4s)
+  iter   500/2000  loss -0.9533  std-repr 0.080 (sehat ~0.125, 0 = kolaps)  (5s)
+  iter   600/2000  loss -0.9560  std-repr 0.078 (sehat ~0.125, 0 = kolaps)  (6s)
+  iter   700/2000  loss -0.9585  std-repr 0.076 (sehat ~0.125, 0 = kolaps)  (7s)
+  iter   800/2000  loss -0.9588  std-repr 0.074 (sehat ~0.125, 0 = kolaps)  (8s)
+  iter   900/2000  loss -0.9607  std-repr 0.072 (sehat ~0.125, 0 = kolaps)  (9s)
+  iter  1000/2000  loss -0.9620  std-repr 0.071 (sehat ~0.125, 0 = kolaps)  (10s)
+  iter  1100/2000  loss -0.9626  std-repr 0.070 (sehat ~0.125, 0 = kolaps)  (11s)
+  iter  1200/2000  loss -0.9630  std-repr 0.070 (sehat ~0.125, 0 = kolaps)  (12s)
+  iter  1300/2000  loss -0.9623  std-repr 0.070 (sehat ~0.125, 0 = kolaps)  (13s)
+  iter  1400/2000  loss -0.9629  std-repr 0.069 (sehat ~0.125, 0 = kolaps)  (14s)
+  iter  1500/2000  loss -0.9625  std-repr 0.069 (sehat ~0.125, 0 = kolaps)  (15s)
+  iter  1600/2000  loss -0.9615  std-repr 0.068 (sehat ~0.125, 0 = kolaps)  (15s)
+  iter  1700/2000  loss -0.9613  std-repr 0.069 (sehat ~0.125, 0 = kolaps)  (16s)
+  iter  1800/2000  loss -0.9609  std-repr 0.069 (sehat ~0.125, 0 = kolaps)  (17s)
+  iter  1900/2000  loss -0.9597  std-repr 0.069 (sehat ~0.125, 0 = kolaps)  (18s)
+  iter  2000/2000  loss -0.9600  std-repr 0.069 (sehat ~0.125, 0 = kolaps)  (19s)
+  pre-training selesai (19s)
+  pretrain  FineLast seed 1: AC@1=0.920 AC@3=0.987 AC@5=1.000 Avg@5=0.976 (2s)
+  pretrain  FineAll  seed 1: AC@1=0.947 AC@3=1.000 AC@5=1.000 Avg@5=0.987 (11s)
+  scratch   FineLast seed 1: AC@1=0.907 AC@3=0.987 AC@5=1.000 Avg@5=0.973 (2s)
+  scratch   FineAll  seed 1: AC@1=0.920 AC@3=0.987 AC@5=1.000 Avg@5=0.976 (11s)
+
+=== seed 2 ===
+  iter   100/2000  loss -0.7916  std-repr 0.091 (sehat ~0.125, 0 = kolaps)  (1s)
+  iter   200/2000  loss -0.9556  std-repr 0.083 (sehat ~0.125, 0 = kolaps)  (2s)
+  iter   300/2000  loss -0.9515  std-repr 0.078 (sehat ~0.125, 0 = kolaps)  (3s)
+  iter   400/2000  loss -0.9560  std-repr 0.073 (sehat ~0.125, 0 = kolaps)  (4s)
+  iter   500/2000  loss -0.9595  std-repr 0.069 (sehat ~0.125, 0 = kolaps)  (5s)
+  iter   600/2000  loss -0.9643  std-repr 0.066 (sehat ~0.125, 0 = kolaps)  (6s)
+  iter   700/2000  loss -0.9679  std-repr 0.064 (sehat ~0.125, 0 = kolaps)  (7s)
+  iter   800/2000  loss -0.9696  std-repr 0.063 (sehat ~0.125, 0 = kolaps)  (8s)
+  iter   900/2000  loss -0.9699  std-repr 0.062 (sehat ~0.125, 0 = kolaps)  (9s)
+  iter  1000/2000  loss -0.9697  std-repr 0.062 (sehat ~0.125, 0 = kolaps)  (10s)
+  iter  1100/2000  loss -0.9699  std-repr 0.062 (sehat ~0.125, 0 = kolaps)  (11s)
+  iter  1200/2000  loss -0.9701  std-repr 0.061 (sehat ~0.125, 0 = kolaps)  (11s)
+  iter  1300/2000  loss -0.9697  std-repr 0.061 (sehat ~0.125, 0 = kolaps)  (12s)
+  iter  1400/2000  loss -0.9688  std-repr 0.061 (sehat ~0.125, 0 = kolaps)  (13s)
+  iter  1500/2000  loss -0.9667  std-repr 0.062 (sehat ~0.125, 0 = kolaps)  (14s)
+  iter  1600/2000  loss -0.9708  std-repr 0.062 (sehat ~0.125, 0 = kolaps)  (15s)
+  iter  1700/2000  loss -0.9737  std-repr 0.060 (sehat ~0.125, 0 = kolaps)  (17s)
+  iter  1800/2000  loss -0.9741  std-repr 0.058 (sehat ~0.125, 0 = kolaps)  (18s)
+  iter  1900/2000  loss -0.9739  std-repr 0.058 (sehat ~0.125, 0 = kolaps)  (19s)
+  iter  2000/2000  loss -0.9761  std-repr 0.057 (sehat ~0.125, 0 = kolaps)  (20s)
+  pre-training selesai (20s)
+  pretrain  FineLast seed 2: AC@1=0.893 AC@3=0.987 AC@5=1.000 Avg@5=0.973 (2s)
+  pretrain  FineAll  seed 2: AC@1=0.920 AC@3=0.987 AC@5=1.000 Avg@5=0.979 (16s)
+  scratch   FineLast seed 2: AC@1=0.907 AC@3=1.000 AC@5=1.000 Avg@5=0.979 (2s)
+  scratch   FineAll  seed 2: AC@1=0.933 AC@3=0.987 AC@5=1.000 Avg@5=0.973 (15s)
+
+== Ringkasan test (mean ± std antar seed) ==
+                    AC@1          AC@3        AC@5       Avg@5       
+                    mean    std   mean    std mean  std   mean    std
+variant  mode                                                        
+pretrain FineAll   0.929  0.015  0.996  0.008  1.0  0.0  0.982  0.004
+         FineLast  0.911  0.015  0.991  0.008  1.0  0.0  0.975  0.002
+scratch  FineAll   0.924  0.008  0.982  0.008  1.0  0.0  0.974  0.002
+         FineLast  0.911  0.008  0.987  0.013  1.0  0.0  0.974  0.004
+
+Heuristik (test): {'AC@1': 0.813, 'AC@3': 0.96, 'AC@5': 0.987, 'Avg@5': 0.923, 'n': 75}

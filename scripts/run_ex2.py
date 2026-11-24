@@ -36,11 +36,12 @@ sys.path.insert(0, str(ROOT / "src"))
 from ssl_rcl.baseline import heuristic_table  # noqa: E402
 from ssl_rcl.data import CORE_METRICS, build_samples, stratified_split  # noqa: E402
 from ssl_rcl.finetune import predict_table, summarize_ranks, train_fineall, train_finelast  # noqa: E402
+from ssl_rcl.models.run import RUNEncoder  # noqa: E402
 from ssl_rcl.models.timemae import TimeMAEEncoder  # noqa: E402
 from ssl_rcl.models.ts2vec import TSEncoder  # noqa: E402
 
 ALL_RE = ["RE1", "RE2", "RE3"]
-ENCODERS = {"ts2vec": TSEncoder, "timemae": TimeMAEEncoder}   # RUN ditambahkan di sini setelah diimplementasikan
+ENCODERS = {"ts2vec": TSEncoder, "timemae": TimeMAEEncoder, "run": RUNEncoder}
 
 p = argparse.ArgumentParser()
 p.add_argument("--target", required=True, choices=ALL_RE)
@@ -72,13 +73,16 @@ K = len(CORE_METRICS)
 def encoder_for(re_name):
     """Encoder kosong dengan arsitektur yang sama seperti saat pre-training di `re_name` (EX-1).
 
-    TimeMAE: hiperparameter arsitektur dibaca dari results/ex1/<RE>_timemae/config.json, karena checkpoint
-    hanya berisi bobot. Tanpa itu, `--tm-dim/--tm-depth/--tm-patch` yang non-default akan gagal dimuat.
+    TimeMAE/RUN: hiperparameter arsitektur dibaca dari results/ex1/<RE>_<model>/config.json, karena checkpoint
+    hanya berisi bobot. Tanpa itu, `--tm-*`/`--run-*` yang non-default akan gagal dimuat.
     """
     if args.model == "ts2vec":
         return TSEncoder(2 * K)
-    cfg_path = ROOT / "results" / "ex1" / f"{re_name}_timemae" / "config.json"
+    cfg_path = ROOT / "results" / "ex1" / f"{re_name}_{args.model}" / "config.json"
     cfg = json.loads(cfg_path.read_text()) if cfg_path.exists() else {}
+    if args.model == "run":
+        return RUNEncoder(2 * K, cfg.get("run_dim", 64), cfg.get("run_window", 32), cfg.get("run_ma", 25),
+                          cfg.get("run_mask_p", 0.5))
     return TimeMAEEncoder(2 * K, cfg.get("tm_dim", 64), cfg.get("tm_patch", 12), cfg.get("tm_depth", 8))
 
 # Semua checkpoint dicek di awal supaya run panjang tidak gagal di tengah.

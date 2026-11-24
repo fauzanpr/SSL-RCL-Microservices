@@ -1,0 +1,44 @@
+{
+  "state": "finished",
+  "exp": "ex1",
+  "model": "run",
+  "sources": [
+    "RE1",
+    "RE2",
+    "RE3"
+  ],
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "extra": [],
+  "total": null,
+  "started": "2026-11-25T02:30:46",
+  "worker_pid": 7588,
+  "current": null,
+  "runs": {
+    "RE1": {
+      "state": "done",
+      "started": "2026-11-25T02:30:47",
+      "child_pid": 15264,
+      "exit_code": 0,
+      "finished": "2026-11-25T02:33:30"
+    },
+    "RE2": {
+      "state": "done",
+      "started": "2026-11-25T02:33:30",
+      "child_pid": 5040,
+      "exit_code": 0,
+      "finished": "2026-11-25T02:36:19"
+    },
+    "RE3": {
+      "state": "done",
+      "started": "2026-11-25T02:36:19",
+      "child_pid": 3740,
+      "exit_code": 0,
+      "finished": "2026-11-25T02:38:38"
+    }
+  },
+  "finished": "2026-11-25T02:38:38"
+}
