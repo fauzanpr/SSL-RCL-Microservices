@@ -1,0 +1,30 @@
+{
+  "target": "RE1",
+  "sources": [
+    "RE2",
+    "RE3"
+  ],
+  "model": "run",
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "fractions": [
+    0.1,
+    0.25,
+    0.5,
+    1.0
+  ],
+  "modes": [
+    "FineLast",
+    "FineAll"
+  ],
+  "no_indomain": false,
+  "no_scratch": false,
+  "fineall_epochs": 30,
+  "ckpt_dir": "C:\\Users\\edy\\vsc-projects\\SSL-RCL-Microservices\\checkpoints\\ex1",
+  "out_dir": null,
+  "resume": false,
+  "device": "cuda"
+}

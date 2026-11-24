@@ -1,0 +1,14 @@
+[2026-11-25T04:35:22] C:\Users\edy\AppData\Local\Programs\Python\Python310\python.exe -u C:\Users\edy\vsc-projects\SSL-RCL-Microservices\scripts\run_ex2.py --target RE1 --model ts2vec --seeds 0 1 2 --fractions 0.1 0.25 0.5 1.0 --modes FineLast FineAll
+[2026-11-25T04:57:27] ts2vec -> RE1: selesai (22.1 menit)
+[2026-11-25T04:57:27] C:\Users\edy\AppData\Local\Programs\Python\Python310\python.exe -u C:\Users\edy\vsc-projects\SSL-RCL-Microservices\scripts\run_ex2.py --target RE2 --model ts2vec --seeds 0 1 2 --fractions 0.1 0.25 0.5 1.0 --modes FineLast FineAll
+[2026-11-25T05:13:15] ts2vec -> RE2: selesai (15.8 menit)
+[2026-11-25T05:13:15] C:\Users\edy\AppData\Local\Programs\Python\Python310\python.exe -u C:\Users\edy\vsc-projects\SSL-RCL-Microservices\scripts\run_ex2.py --target RE1 --model timemae --seeds 0 1 2 --fractions 0.1 0.25 0.5 1.0 --modes FineLast FineAll
+[2026-11-25T05:45:31] timemae -> RE1: selesai (32.3 menit)
+[2026-11-25T05:45:31] C:\Users\edy\AppData\Local\Programs\Python\Python310\python.exe -u C:\Users\edy\vsc-projects\SSL-RCL-Microservices\scripts\run_ex2.py --target RE2 --model timemae --seeds 0 1 2 --fractions 0.1 0.25 0.5 1.0 --modes FineLast FineAll
+[2026-11-25T06:07:44] timemae -> RE2: selesai (22.2 menit)
+[2026-11-25T06:07:44] C:\Users\edy\AppData\Local\Programs\Python\Python310\python.exe -u C:\Users\edy\vsc-projects\SSL-RCL-Microservices\scripts\run_ex2.py --target RE1 --model run --seeds 0 1 2 --fractions 0.1 0.25 0.5 1.0 --modes FineLast FineAll
+[2026-11-25T06:13:56] run -> RE1: selesai (6.2 menit)
+[2026-11-25T06:13:56] C:\Users\edy\AppData\Local\Programs\Python\Python310\python.exe -u C:\Users\edy\vsc-projects\SSL-RCL-Microservices\scripts\run_ex2.py --target RE2 --model run --seeds 0 1 2 --fractions 0.1 0.25 0.5 1.0 --modes FineLast FineAll
+[2026-11-25T06:18:55] run -> RE2: selesai (5.0 menit)
+
+[2026-11-25T06:18:55] selesai dalam 103.5 menit. Gagal: tidak ada

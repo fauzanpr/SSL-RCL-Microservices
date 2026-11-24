@@ -94,6 +94,14 @@ python scripts/run_ex2.py --target RE2 --modes FineAll --resume          # lanju
 
 `--fractions` men-subsample split train target (terstratifikasi, minimal 1 kasus per root service) untuk skenario label sedikit, sedangkan val dan test tetap penuh. Hasil disimpan di `results/ex2/<target>_<model>/`. Tambahkan `--model timemae` untuk TimeMAE (arsitektur encoder dibaca dari `results/ex1/<RE>_timemae/config.json`). RE3 sebagai target sudah mencapai ceiling (AC@1 ≈ 1.0 bahkan untuk scratch), jadi kurang informatif.
 
+### Semua metode sekaligus
+```bash
+python scripts/run_ex2_all.py                      # ts2vec, timemae, run x target RE1, RE2; fraksi 0.1/0.25/0.5/1.0; FineLast+FineAll; seed 0-2
+python scripts/run_ex2_all.py --resume             # lanjutkan yang terhenti
+python scripts/run_ex2_all.py --models run --targets RE2 --seeds 0 --dry-run
+```
+Checkpoint EX-1 yang hilang dibuat ulang otomatis lewat `run_ex1.py --pretrain-only` (hanya pre-training; `results/ex1/` tidak diubah). Log: `logs/ex2_<target>_<model>.log`.
+
 ## Struktur
 ```
 src/ssl_rcl/        data.py (loader + skema K=5), baseline.py (heuristik |z|), finetune.py (FineLast/FineAll)

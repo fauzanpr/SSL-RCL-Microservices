@@ -44,6 +44,9 @@ p.add_argument("--pt-window", type=int, default=540)
 p.add_argument("--pt-stride", type=int, default=270)
 p.add_argument("--fineall-epochs", type=int, default=30)
 p.add_argument("--no-scratch", action="store_true", help="lewati kontrol encoder acak")
+p.add_argument("--pretrain-only", action="store_true",
+               help="hanya pre-training + simpan checkpoint (tanpa fine-tuning). results/ex1/ TIDAK disentuh; "
+                    "dipakai untuk membuat ulang checkpoint bagi EX-2")
 p.add_argument("--device", default="mps" if torch.backends.mps.is_available() else
                ("cuda" if torch.cuda.is_available() else "cpu"))
 p.add_argument("--pretrain-device", default="auto",
@@ -76,8 +79,10 @@ device = torch.device(args.device)
 pt_device = torch.device(args.pretrain_device)
 out_dir = ROOT / "results" / "ex1" / f"{args.source}_{args.model}"
 ck_dir = ROOT / "checkpoints" / "ex1"
-out_dir.mkdir(parents=True, exist_ok=True); ck_dir.mkdir(parents=True, exist_ok=True)
-(out_dir / "config.json").write_text(json.dumps(vars(args), indent=2))
+ck_dir.mkdir(parents=True, exist_ok=True)
+if not args.pretrain_only:
+    out_dir.mkdir(parents=True, exist_ok=True)
+    (out_dir / "config.json").write_text(json.dumps(vars(args), indent=2))
 
 K = len(CORE_METRICS)
 cache = ROOT / "cache"
@@ -142,6 +147,8 @@ for seed in args.seeds:
     print(f"  pre-training selesai ({time.time() - t:.0f}s)")
     torch.save(enc.state_dict(), ck_dir / f"{args.source}_{args.model}_seed{seed}.pt")
     pt_logs.append(pd.DataFrame(dict(seed=seed, iter=np.arange(1, len(log) + 1), loss=log)))
+    if args.pretrain_only:
+        continue
 
     torch.manual_seed(seed)
     encoders = {"pretrain": enc}
@@ -158,6 +165,10 @@ for seed in args.seeds:
     pd.DataFrame(summary_rows).to_csv(out_dir / "summary.csv", index=False)
     pd.concat(hist_rows).to_csv(out_dir / "history.csv", index=False)
     pd.concat(pt_logs).to_csv(out_dir / "pretrain_loss.csv", index=False)
+
+if args.pretrain_only:
+    print(f"\nCheckpoint tersimpan di {ck_dir} (--pretrain-only: results/ex1 tidak diubah)")
+    sys.exit(0)
 
 heur = heuristic_table(test); heur["variant"], heur["mode"], heur["seed"] = "heuristic", "-", -1
 heur.to_csv(out_dir / "heuristic_test.csv", index=False)
