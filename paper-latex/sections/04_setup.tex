@@ -1,0 +1,21 @@
+\section{Dataset dan Pengaturan Eksperimen}\label{sec:setup}
+\subsection{Dataset}
+Eksperimen memakai tiga dataset RCAEval \cite{pham2024rcaeval}, masing-masing mencakup sistem Online Boutique, Sock Shop, dan Train Ticket (Tabel~\ref{tab:datasets}). RE1 hanya berisi metrik, sedangkan RE2 dan RE3 juga berisi log dan trace; penelitian ini hanya memakai channel metrik yang dicantumkan pada Bagian~\ref{sec:method}, sehingga ketiga dataset dapat dibandingkan. RE1 dan RE2 memuat fault sumber daya dan jaringan (RE2 menambahkan fault socket), sedangkan RE3 memuat fault tingkat kode. Setelah pembagian 60/20/20, data uji berisi 75 kasus (RE1), 45 kasus (RE2), dan 18 kasus (RE3). Dataset D1 dari ART tidak dipakai pada versi penelitian ini.
+\input{tables/tab_datasets}
+\todo{Tambahkan jumlah service aplikasi per sistem setelah preprocessing, interval sampling asli tiap dataset, dan jumlah kasus yang kehilangan setiap channel. Konsekuensi: tanpa jumlah service, chance level AC@3 dan Avg@5 tidak dapat dihitung dan AC@3 tidak dapat ditafsirkan.}
+
+\subsection{Rancangan Eksperimen}
+Tabel~\ref{tab:config} mencantumkan konfigurasi eksperimen. EX-1 melatih dan menguji pada dataset yang sama. EX-2 melakukan pre-training pada dataset yang berbeda, sehingga setiap target dievaluasi dengan encoder transfer, in-domain, dan acak. Untuk encoder yang dapat dilatih (TS2Vec, TimeMAE, RUN-encoder), setiap konfigurasi disilangkan dengan dua mode fine-tuning dan empat fraksi label, lalu diulang dengan tiga seed pada satu pembagian data tetap.
+\input{tables/tab_config}
+
+\subsection{Aturan Perbandingan}\label{sec:fair}
+Mekanisme pelatihan ketiga metode berbeda, sehingga satu protokol tunggal tidak dipaksakan kepada semuanya. Eksperimen menjawab tiga pertanyaan, masing-masing dengan aturan perbandingannya sendiri.
+\begin{description}
+\item[C1: Kinerja RCA (metode terhadap metode).] Setiap metode dijalankan pada konfigurasi terbaiknya yang dipilih pada kasus validasi, dengan kasus, seed, data uji, dan metrik yang sama (Bagian~\ref{sec:metrics}); anggaran tuning tiap metode dilaporkan. RUN-original dan heuristik disertakan sebagai acuan tanpa transfer. Perbandingan ini mengukur apa yang akan diperoleh praktisi dari tiap metode, bukan nilai pre-training.
+\item[C2: Efek pre-training dan transfer (di dalam satu metode).] Untuk setiap encoder yang dapat dilatih, encoder hasil pre-training atau transfer dibandingkan dengan encoder acak berarsitektur sama pada head, label, dan mode fine-tuning yang sama, menggunakan paired bootstrap. AC@1 absolut tidak dibandingkan antar metode dalam analisis ini; hanya keuntungan setiap metode terhadap encoder acaknya sendiri yang dibandingkan, dan dinyatakan sebagai efek relatif.
+\item[C3: Efek label dan fine-tuning (di dalam satu metode).] AC@1 dilaporkan untuk setiap fraksi label dan mode fine-tuning. RUN-original tidak memakai label dan hanya muncul sebagai garis acuan horizontal.
+\end{description}
+
+\subsection{Detail Implementasi}
+Tabel~\ref{tab:impl} mencantumkan hiperparameter yang dilaporkan pada paper asli dan nilai yang dipakai di sini. Head, optimizer, aturan early stopping, dan seed dibuat sama pada seluruh kondisi untuk satu metode.
+\input{tables/tab_impl}

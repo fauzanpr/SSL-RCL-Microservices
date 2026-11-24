@@ -1,0 +1,18 @@
+\begin{table}
+\caption{Konfigurasi eksperimen; $\mathcal{S}$ adalah dataset sumber dan $\mathcal{T}$ dataset target. Encoder in-domain pada EX-2 adalah encoder hasil pre-training pada EX-1.}\label{tab:config}
+\centering
+\small
+\begin{tabular}{p{1.9cm}p{3.8cm}p{5.3cm}}
+\toprule
+ & EX-1 (in-domain) & EX-2 (transfer)\\
+\midrule
+Pre-training & $\mathcal{S}=\mathcal{T}$ & $\mathcal{S}\neq\mathcal{T}$, $\mathcal{S}\in\{\mathrm{RE1},\mathrm{RE2},\mathrm{RE3}\}$\\
+Fine-tuning dan uji & $\mathcal{T}\in\{\mathrm{RE1},\mathrm{RE2},\mathrm{RE3}\}$ & $\mathcal{T}\in\{\mathrm{RE1},\mathrm{RE2}\}$; RE3 bukan target (jenuh)\\
+Encoder & Pre-trained, acak & Transfer, in-domain, acak\\
+Mode fine-tuning & FineLast, FineAll & FineLast, FineAll\\
+Fraksi label & \todo{konfirmasi} & 10\%, 25\%, 50\%, 100\%\\
+Seed & 3 & 3\\
+Metrik & AC@1 (AC@3, Avg@5) & AC@1 (AC@3, Avg@5); paired bootstrap, 10.000 resampel\\
+\bottomrule
+\end{tabular}
+\end{table}

@@ -1,0 +1,13 @@
+\begin{figure}
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tikzpicture}[node distance=5mm, box/.style={draw, rounded corners, align=center, font=\scriptsize, minimum height=10mm, text width=2.1cm}, >=Stealth]
+\node[box] (data) {RCAEval\\RE1, RE2, RE3};
+\node[box, right=of data] (prep) {Preprocessing\\robust $z$-score,\\jendela 540\,detik};
+\node[box, right=of prep] (pre) {Pre-training SSL\\(dataset sumber,\\tanpa label)};
+\node[box, right=of pre] (ft) {Fine-tuning\\FineLast / FineAll\\(target, berlabel)};
+\node[box, right=of ft] (ev) {Evaluasi\\AC@$k$, bootstrap};
+\draw[->] (data)--(prep); \draw[->] (prep)--(pre); \draw[->] (pre)--(ft); \draw[->] (ft)--(ev);
+\end{tikzpicture}}
+\caption{Alur penelitian. Dua kontrol dipakai di seluruh eksperimen: encoder yang diinisialisasi acak (tanpa pre-training) dan baseline heuristik yang tidak memerlukan pelatihan.}\label{fig:pipeline}
+\end{figure}

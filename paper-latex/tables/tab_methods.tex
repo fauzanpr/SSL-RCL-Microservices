@@ -1,0 +1,17 @@
+\begin{table}
+\caption{Mekanisme ketiga metode yang dibandingkan, sebagaimana dijelaskan pada paper aslinya.}\label{tab:methods}
+\centering
+\small
+\begin{tabular}{p{1.9cm}p{2.9cm}p{3.1cm}p{3.2cm}}
+\toprule
+ & TS2Vec \cite{yue2022ts2vec} & TimeMAE \cite{cheng2026timemae} & RUN \cite{lin2024run}\\
+\midrule
+Paradigma & SSL kontrastif & SSL masked autoencoder & Neural Granger causal discovery dengan pre-training kontrastif\\
+Backbone & CNN dilated (10 blok residual) & Transformer encoder dengan token sub-series dan decoupled encoder terpisah & DLinear (model peramalan)\\
+Sinyal pretext & Kontras temporal dan antar-instance secara hierarkis antar potongan deret & Masked codeword classification dan regresi target momentum (masking 60\%) & Kesepakatan dua potongan deret, tanpa pasangan negatif\\
+Memakai label? & Hanya saat fine-tuning & Hanya saat fine-tuning & Tidak (per kasus, tak terawasi)\\
+Bagian yang dapat ditransfer & Encoder & Encoder & Tidak ada pada RUN-original; backbone pada RUN-encoder\\
+Keluaran untuk RCA & Representasi $\rightarrow$ scoring head & Representasi $\rightarrow$ scoring head & Graf kausal $\rightarrow$ rangking PageRank\\
+\bottomrule
+\end{tabular}
+\end{table}

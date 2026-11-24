@@ -1,0 +1,20 @@
+\begin{table}
+\caption{Hiperparameter. Baris ``paper'' adalah nilai yang dilaporkan pada paper asli untuk tolok ukurnya masing-masing dan belum tentu sama dengan yang dipakai di sini; nilai ``dipakai'' harus dilengkapi untuk penelitian ini.}\label{tab:impl}
+\centering
+\scriptsize
+\setlength{\tabcolsep}{2.5pt}
+\begin{tabular}{p{1.9cm}p{3.0cm}p{3.2cm}p{2.5cm}}
+\toprule
+Pengaturan & TS2Vec \cite{yue2022ts2vec} & TimeMAE \cite{cheng2026timemae} & RUN \cite{lin2024run}\\
+\midrule
+Backbone (paper) & Proyeksi masukan, CNN dilated dengan 10 blok residual & Transformer, 8 layer, 4 head, dropout 0,2; decoupled encoder 6 layer & DLinear\\
+Ukuran representasi (paper) & 320 (klasifikasi) & 64 & tidak disebutkan\\
+Spesifikasi pre-training (paper) & Cropping; timestamp masking dengan $p=0{,}5$ & Rasio mask 60\%; panjang sub-series dicari pada $\{4,8,12,16\}$; ukuran codebook dicari pada $\{64,\dots,512\}$; $\alpha=1$, $\beta$ dicari pada $\{1,\dots,10\}$; momentum 0,99 & Window 32; 50 epoch untuk pre-training dan fine-tuning\\
+Optimizer (paper) & Tidak ada di teks utama (appendix) & Adam, lr 0,001, batch 64 & Adam, lr 0,001, batch 128\\
+Dipakai pada penelitian ini & \todo{} & \todo{} & \todo{}\\
+\midrule
+Head, loss, epoch, early stopping & \multicolumn{3}{l}{\todo{disamakan antar metode sejauh encoder memungkinkan}}\\
+Perangkat keras, waktu komputasi & \multicolumn{3}{l}{\todo{}}\\
+\bottomrule
+\end{tabular}
+\end{table}

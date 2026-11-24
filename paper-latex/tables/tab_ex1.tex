@@ -1,0 +1,25 @@
+\begin{table}
+\caption{EX-1: AC@1 pada data uji, rata-rata $\pm$ SD dari 3 seed (pre-training dan pengujian pada dataset yang sama). Nilai TS2Vec berasal dari slide proyek; \pending\ menandai eksperimen yang belum dijalankan.}\label{tab:ex1}
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{llccccc}
+\toprule
+ & & & \multicolumn{2}{c}{FineLast} & \multicolumn{2}{c}{FineAll}\\
+\cmidrule(lr){4-5}\cmidrule(lr){6-7}
+Dataset (kasus uji) & Metode & Heuristik & Pre-trained & Acak & Pre-trained & Acak\\
+\midrule
+RE1 (75) & TS2Vec  & 0,81 & 0,92$\pm$0,02 & 0,94$\pm$0,01 & 0,95$\pm$0,01 & 0,93$\pm$0,02\\
+         & TimeMAE & 0,81 & \pending & \pending & \pending & \pending\\
+         & RUN-encoder & 0,81 & \pending & \pending & \pending & \pending\\
+\midrule
+RE2 (45) & TS2Vec  & 0,80 & 0,89$\pm$0,02 & 0,86$\pm$0,01 & 0,86$\pm$0,01 & 0,87$\pm$0,02\\
+         & TimeMAE & 0,80 & \pending & \pending & \pending & \pending\\
+         & RUN-encoder & 0,80 & \pending & \pending & \pending & \pending\\
+\midrule
+RE3 (18) & TS2Vec  & 0,67 & 1,00$\pm$0,00 & 1,00$\pm$0,00 & 1,00$\pm$0,00 & 1,00$\pm$0,00\\
+         & TimeMAE & 0,67 & \pending & \pending & \pending & \pending\\
+         & RUN-encoder & 0,67 & \pending & \pending & \pending & \pending\\
+\bottomrule
+\end{tabular}
+\end{table}

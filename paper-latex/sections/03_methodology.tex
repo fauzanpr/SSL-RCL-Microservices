@@ -1,0 +1,79 @@
+\section{Metodologi Penelitian}\label{sec:method}
+Gambar~\ref{fig:pipeline} merangkum alur kerja. Kasus-kasus RCAEval diproses menjadi tensor berukuran tetap; encoder di-pre-train tanpa label pada dataset sumber; scoring head kemudian dilatih dengan label pada dataset target dalam salah satu dari dua mode fine-tuning; dan setiap model dievaluasi terhadap dua kontrol.
+\input{figures/fig_pipeline}
+
+\subsection{Formulasi Masalah dan Notasi}
+Sebuah \emph{kasus} $i$ adalah satu kegagalan yang diinjeksikan. Kasus ini memiliki himpunan $N_i$ service aplikasi kandidat yang diamati selama $T=540$ detik (300\,detik sebelum dan 240\,detik sesudah injeksi fault) melalui $C=5$ channel, yaitu CPU, memori, latency-50, latency-90, dan workload. Masukannya adalah tensor $\mathbf{X}_i\in\mathbb{R}^{N_i\times T\times C}$ dengan mask ketersediaan $\mathbf{M}_i\in\{0,1\}^{N_i\times C}$, dan labelnya adalah indeks $c_i\in\{1,\dots,N_i\}$ dari service akar masalah. Metode lokalisasi mengembalikan skor $s_{i,j}$ untuk setiap service kandidat $j$ dan merangking service berdasarkan skor yang menurun. Waktu injeksi diasumsikan diketahui, seperti pada evaluasi RCL di ART \cite{sun2024art}. Untuk semua metode, himpunan kandidat suatu kasus sama, dan keluarannya adalah rangking service, bukan rangking KPI. Bagian~\ref{sec:runmap} menjelaskan bagaimana hal ini dijamin untuk RUN.
+
+\subsection{Preprocessing}
+\begin{enumerate}
+\item \textbf{Penyelarasan fitur.} Service aplikasi dipilih berdasarkan ketersediaan CPU. Jika suatu channel tidak tersedia untuk sebuah service, nilainya diisi 0 dan ditandai tidak tersedia pada $\mathbf{M}_i$.
+\item \textbf{Pembersihan dan normalisasi.} Deret diresampling ke grid 1\,detik dengan forward dan backward fill. Untuk setiap channel, robust $z$-score dihitung dari median dan median absolute deviation (MAD) pada seluruh periode pra-injeksi. Simpangan baku dipakai sebagai cadangan ketika MAD degenerat, dan nilai dibatasi pada $[-10,10]$.
+\item \textbf{Jendela dan tensor.} 300\,detik sebelum dan 240\,detik sesudah injeksi digabung menjadi $\mathbf{X}_i$.
+\item \textbf{Pembagian data.} Kasus dibagi menjadi data latih, validasi, dan uji dengan rasio sekitar 60/20/20, terstratifikasi menurut sistem dan service akar masalah. Pre-training hanya memakai kasus latih; kasus validasi dipakai untuk pemilihan model dan early stopping.
+\end{enumerate}
+
+\subsection{Encoder dan Objective Pre-training}
+Setiap encoder $g$ memetakan deret satu service menjadi vektor representasi dan diterapkan dengan bobot bersama pada setiap service dalam satu kasus. Objective di bawah ini adalah objective pada paper aslinya; $r_{i,t}$ menyatakan representasi timestamp $t$ dari deret $i$, tanda petik tunggal menandai tampilan kedua, dan $\mathcal{B}$ adalah satu batch pelatihan.
+
+\paragraph{TS2Vec.} Encoder terdiri atas proyeksi masukan, modul timestamp masking (mask Bernoulli dengan $p=0{,}5$ pada vektor laten), dan CNN dilated dengan sepuluh blok residual \cite{yue2022ts2vec}. Dua tampilan yang dipotong secara acak dan saling tumpang tindih dikodekan, dan representasi timestamp pada bagian yang tumpang tindih membentuk pasangan positif. Dengan $\Omega$ sebagai himpunan timestamp yang tumpang tindih,
+\begin{align}
+\ell_{\mathrm{temp}}^{(i,t)} &= -\log\frac{\exp(r_{i,t}\cdot r'_{i,t})}{\sum_{t'\in\Omega}\bigl(\exp(r_{i,t}\cdot r'_{i,t'})+\mathbb{1}_{[t\neq t']}\exp(r_{i,t}\cdot r_{i,t'})\bigr)},\\
+\ell_{\mathrm{inst}}^{(i,t)} &= -\log\frac{\exp(r_{i,t}\cdot r'_{i,t})}{\sum_{j\in\mathcal{B}}\bigl(\exp(r_{i,t}\cdot r'_{j,t})+\mathbb{1}_{[i\neq j]}\exp(r_{i,t}\cdot r_{j,t})\bigr)},
+\end{align}
+dan dual loss $\mathcal{L}_{\mathrm{dual}}$ adalah rata-rata $\ell_{\mathrm{temp}}^{(i,t)}+\ell_{\mathrm{inst}}^{(i,t)}$ pada seluruh deret dan timestamp. Hierarchical loss mengulangi perhitungan ini setelah max pooling berturut-turut (ukuran kernel 2) sepanjang waktu, lalu merata-ratakannya pada seluruh skala.
+
+\paragraph{TimeMAE.} Deret dipotong menjadi sub-series yang tidak tumpang tindih, dan 60\% di antaranya di-mask secara acak pada setiap epoch. Transformer encoder $\mathcal{H}$ memproses sub-series yang terlihat dengan relative positional embedding. Decoupled encoder $\mathcal{F}$, yang diperoleh dengan mengganti self-attention menjadi cross-attention, menghitung representasi posisi yang di-mask dari posisi yang terlihat, sehingga tidak ada token mask yang masuk ke $\mathcal{H}$ \cite{cheng2026timemae}. Loss pre-training menggabungkan masked codeword classification $\mathcal{L}_c$, dengan target berupa codeword yang ditetapkan tokenizer dan codebook terpelajar pada tiap sub-series yang di-mask, dan masked representation regression $\mathcal{L}_r$, yaitu jarak $\ell_2$ kuadrat antara prediksi online encoder dan representasi dari target encoder yang diperbarui dengan momentum:
+\begin{equation}
+\mathcal{L}=\alpha\,\mathcal{L}_c+\beta\,\mathcal{L}_r .
+\end{equation}
+Target encoder diperbarui sebagai exponential moving average dari online encoder dengan koefisien 0,99.
+
+\paragraph{RUN-original.} Pipeline RUN \cite{lin2024run} dijalankan tanpa modifikasi pada setiap kasus uji. Tiga tahapnya adalah (i) pre-training kontrastif backbone DLinear $f$ dengan projector $g$ dan loss tanpa pasangan negatif
+\begin{equation}
+\mathcal{L}_{\mathrm{con}}=-\tfrac{1}{2}\bigl(\cos(z_1,\mathrm{sg}(p_2))+\cos(\mathrm{sg}(p_1),z_2)\bigr),
+\end{equation}
+dengan $z=g(f(y))$, $p$ keluaran backbone yang bersesuaian, dan $\mathrm{sg}$ operator stop-gradient; (ii) jaringan peramalan per kasus dengan matriks atensi kausal terpelajar, diberi ambang 0,5 dan dibersihkan dari siklus dengan menghapus sisi yang korelasi Pearson-nya terendah; dan (iii) PageRank dengan vektor personalisasi, dengan skor seri diselesaikan melalui jarak akses dari titik pemicu. RUN-original tidak membutuhkan label dan tidak memiliki parameter yang dapat ditransfer, sehingga ia menjadi baseline RCA tanpa pembelajaran transfer.
+
+\paragraph{RUN-encoder (varian adaptasi, bukan RUN asli).} RUN-encoder hanya mempertahankan tahap (i): backbone DLinear yang di-pre-train dengan $\mathcal{L}_{\mathrm{con}}$ dipakai sebagai encoder dalam protokol transfer. Varian ini berbeda dari RUN-original dalam empat hal: (a) causal discovery dan PageRank dihilangkan; (b) backbone di-pre-train satu kali pada dataset sumber, bukan per kasus; (c) scoring head terawasi dilatih pada label target; dan (d) DLinear, yang sebenarnya adalah model peramalan, dipakai sebagai encoder representasi. Adaptasi ini diperlukan karena transfer tidak dapat dipelajari dengan pipeline yang tidak punya parameter yang dapat ditransfer maupun tahap berbasis label. Hasilnya menggambarkan gagasan pre-training kontrastif RUN, dan tidak pernah dilaporkan sebagai kinerja RUN. \todo{Tetapkan keluaran DLinear mana yang dipakai sebagai vektor representasi. Konsekuensi: pilihan ini menentukan apakah RUN-encoder merepresentasikan deret masukan atau hasil peramalan, sehingga memengaruhi hasil C2 dan C3; keputusan perlu divalidasi sebelum eksperimen dijalankan.}
+Tabel~\ref{tab:methods} merangkum mekanisme ketiga metode, dan Bagian~\ref{sec:fair} menjelaskan cara membandingkannya.
+\input{tables/tab_methods}
+
+\subsection{Rangking Tingkat Service untuk Semua Metode}\label{sec:runmap}
+AC@$k$ hanya dapat dibandingkan antar metode jika setiap metode merangking service kandidat yang sama. Heuristik, TS2Vec, TimeMAE, dan RUN-encoder memberi skor langsung pada service. RUN-original merangking node KPI, sehingga keluarannya dipetakan ke service. Node pada graf RUN adalah channel yang tersedia ($M_{i,j,c}=1$) dari service kandidat, dan skor sebuah service adalah skor PageRank maksimum di antara node-nya. Ini setara dengan menempatkan sebuah service pada posisi KPI pertamanya dalam rangking KPI. Akibatnya, $k$ KPI teratas pada RUN dapat mencakup kurang dari $k$ service, sehingga AC@$k$ tingkat service berbeda dari HR@$k$ tingkat KPI yang dilaporkan di \cite{lin2024run} dan tidak boleh dibandingkan langsung dengannya. \todo{Pemetaan KPI ke service (skor maksimum) adalah pilihan rancangan yang belum divalidasi. Konsekuensi: aturan lain (misalnya rata-rata skor KPI) dapat mengubah rangking RUN-original dan karenanya perbandingan C1; validasi aturan ini dengan tim atau pada data validasi sebelum eksperimen dijalankan.} RUN membutuhkan sebuah KPI pemicu (trigger), padahal kasus RCAEval tidak menyediakannya. Aturan trigger adalah keputusan metodologis yang memengaruhi RUN-original, karena trigger yang dipilih dari data pasca-injeksi memakai informasi yang sama dengan heuristik. \todo{Tetapkan aturan trigger (misalnya KPI dengan rata-rata $|z|$ terbesar setelah injeksi, atau KPI latency frontend yang tetap), pilih hanya pada kasus validasi, dan laporkan. Konsekuensi: aturan data-driven membuat RUN-original dan heuristik berbagi informasi yang sama sehingga keunggulan atau kekalahan RUN sulit ditafsirkan; aturan tetap bergantung pada pengetahuan topologi sistem.} Aturan skor seri pada Bagian~\ref{sec:metrics} diterapkan setelah pemetaan.
+
+\subsection{Skenario Pembelajaran Transfer}
+Misalkan $\mathcal{S}$ adalah dataset sumber untuk pre-training dan $\mathcal{T}$ dataset target untuk fine-tuning dan pengujian.
+\begin{itemize}
+\item \textbf{EX-1 (in-domain).} $\mathcal{S}=\mathcal{T}\in\{\mathrm{RE1},\mathrm{RE2},\mathrm{RE3}\}$.
+\item \textbf{EX-2 (transfer).} $\mathcal{S}\neq\mathcal{T}$, dengan $\mathcal{T}\in\{\mathrm{RE1},\mathrm{RE2}\}$ dan $\mathcal{S}$ dataset RCAEval lainnya. RE3 tidak dipakai sebagai target karena pada eksperimen TS2Vec setiap model sudah mencapai AC@1 sebesar 1,00 di dataset ini, sehingga RE3 tidak dapat membedakan antar-encoder.
+\end{itemize}
+Pada EX-2, tiga encoder dibandingkan pada target yang sama: encoder \emph{transfer} (di-pre-train pada $\mathcal{S}$), encoder \emph{in-domain} (di-pre-train pada $\mathcal{T}$, yaitu encoder hasil pre-training pada EX-1), dan encoder \emph{acak}.
+
+\subsection{Strategi Fine-tuning dan Kontrol}
+Scoring head $h$ memetakan representasi setiap service menjadi satu skalar, sehingga $s_{i,j}=h\bigl(g(\mathbf{X}_{i,j},\mathbf{M}_{i,j})\bigr)$. \todo{Konfirmasi arsitektur head, cara mask masuk ke encoder, dan loss pelatihan (misalnya cross-entropy atas $N_i$ service). Konsekuensi: rincian ini harus identik untuk semua encoder yang dapat memakainya; jika berbeda, perbandingan C2 dan C3 tidak lagi mengisolasi efek pre-training.} Mengikuti istilah TimeMAE \cite{cheng2026timemae}:
+\begin{itemize}
+\item \textbf{FineLast:} $g$ dibekukan dan hanya $h$ yang dilatih, sehingga hasilnya mencerminkan kualitas representasi.
+\item \textbf{FineAll:} $g$ dan $h$ dilatih bersama, sehingga seluruh parameter beradaptasi dengan target.
+\end{itemize}
+Data berlabel dipakai pada fraksi 10\%, 25\%, 50\%, dan 100\% dari kasus latih target. \todo{Nyatakan cara pengambilan subset dan apakah subset bersarang (nested). Konsekuensi: subset yang tidak bersarang menambah variansi antar-fraksi, sehingga tren terhadap jumlah label dapat bercampur dengan efek pemilihan sampel.} Dua kontrol dipakai. \emph{Encoder acak} memiliki arsitektur dan mode fine-tuning yang sama tetapi tanpa pre-training; pre-training dianggap bermanfaat hanya jika mengalahkan kontrol ini. \emph{Heuristik} tidak memerlukan pelatihan: skor sebuah service adalah rata-rata $|z|$ pada 240\,detik setelah injeksi dan pada channel yang tersedia,
+\begin{equation}
+s_{i,j}=\frac{\sum_{t\in\text{pasca}}\sum_{c=1}^{C}M_{i,j,c}\,|z_{i,j,t,c}|}{|\text{pasca}|\sum_{c=1}^{C}M_{i,j,c}},\qquad |\text{pasca}|=240 .
+\end{equation}
+
+\subsection{Metrik Evaluasi}\label{sec:metrics}
+Untuk kasus $i$, rangking akar masalah adalah
+\begin{equation}
+r_i = 1 + \bigl|\{\,j\neq c_i : s_{i,j}\ge s_{i,c_i}\,\}\bigr|,
+\end{equation}
+yang menempatkan service dengan skor seri terhadap akar masalah di atasnya, sehingga skor seri tidak dapat menaikkan akurasi (aturan seri pesimistis). \todo{Aturan seri pesimistis belum divalidasi terhadap kode eksperimen TS2Vec yang sudah berjalan. Konsekuensi: jika kode lama memakai aturan lain (misalnya urutan indeks atau rangking acak), angka heuristik, RUN-original, dan AC@k lain harus dihitung ulang dengan aturan yang sama agar dapat dibandingkan.} Untuk himpunan uji $\mathcal{D}$,
+\begin{equation}
+\mathrm{AC@}k=\frac{1}{|\mathcal{D}|}\sum_{i\in\mathcal{D}}\mathbb{1}[r_i\le k],\qquad
+\mathrm{Avg@}5=\frac{1}{5}\sum_{k=1}^{5}\mathrm{AC@}k .
+\end{equation}
+AC@$k$ identik dengan Top-$K$ pada ART dan HR@$k$ pada RUN jika item yang dirangking sama, dan Avg@5 adalah definisi pada ART (Bagian 5.1.3 dari \cite{sun2024art}). AC@1 adalah metrik utama dan AC@3 metrik sekunder; Avg@5 dilaporkan hanya jika diterapkan secara konsisten pada semua metode. Karena jumlah service per sistem kecil, tingkat kebetulan (chance level) untuk rangking acak seragam adalah
+\begin{equation}
+\mathrm{Chance@}k=\frac{1}{|\mathcal{D}|}\sum_{i\in\mathcal{D}}\frac{\min(k,N_i)}{N_i},\qquad
+\mathrm{Chance\ Avg@}5=\frac{1}{5}\sum_{k=1}^{5}\mathrm{Chance@}k ,
+\end{equation}
+dan $\mathrm{AC@}k=1$ berlaku secara trivial ketika $N_i\le k$. Karena itu, chance level dilaporkan di samping AC@3 dan Avg@5. Selisih terhadap kontrol diuji dengan paired bootstrap atas kasus uji (10.000 resampel). Uji ini tidak menangkap variansi antar-seed; karena banyak perbandingan dilakukan, pengujian diperlakukan sebagai eksploratori kecuali dikenakan koreksi perbandingan ganda. Semua hasil adalah rata-rata dan simpangan baku dari tiga seed acak.

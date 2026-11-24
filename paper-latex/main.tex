@@ -1,0 +1,64 @@
+% Kerangka berdasarkan samplepaper.tex (LLNCS v2.21). Preamble template dipertahankan;
+% hanya paket untuk bahasa Indonesia, matematika, tabel, dan gambar yang ditambahkan.
+% Membutuhkan llncs.cls dan splncs04.bst: buat project dari template resmi "Springer LNCS"
+% di Overleaf, lalu unggah berkas-berkas ini di atasnya.
+\documentclass[runningheads]{llncs}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+
+% Package Tambahan (dari template)
+\usepackage{float}
+\usepackage{array}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{times}
+\usepackage{hyperref}
+\usepackage{caption}
+% Package Tambahan (untuk naskah ini); llncs tidak memuat paket AMS sendiri
+\usepackage[indonesian]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta,fit,backgrounds}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.17}
+
+% Nama bagian dalam bahasa Indonesia (dijalankan setelah class dan babel dimuat)
+\AtBeginDocument{%
+  \def\abstractname{Abstrak.}%
+  \def\refname{Daftar Pustaka}%
+  \def\figurename{Gambar}%
+  \def\tablename{Tabel}%
+  \def\keywordname{{\bfseries Kata kunci:}}%
+}
+
+% Penanda hasil yang BELUM dihasilkan. Jangan diganti dengan angka perkiraan.
+\newcommand{\pending}{\textcolor{red}{\textbf{[belum ada]}}}
+% Penanda teks atau informasi yang masih dibutuhkan dari penulis.
+\newcommand{\todo}[1]{\textcolor{blue}{[\textbf{TODO:} #1]}}
+
+\begin{document}
+
+\title{Self-Supervised Learning dan Transfer Learning untuk Lokalisasi Root-Cause Service pada Microservice: Studi Perbandingan TS2Vec, TimeMAE, dan RUN pada RCAEval}
+\titlerunning{SSL dan Transfer Learning untuk Lokalisasi Root-Cause Service}
+
+\author{Fauzan Pradana \and Edy Rahman \and Zalzabila Rani}
+\authorrunning{F. Pradana et al.}
+\institute{Fakultas Ilmu Komputer, Universitas Brawijaya, Malang, Indonesia}
+\maketitle
+
+\input{sections/00_abstract}
+\input{sections/01_introduction}
+\input{sections/02_related_work}
+\input{sections/03_methodology}
+\input{sections/04_setup}
+\input{sections/05_results}
+\input{sections/06_discussion}
+\input{sections/07_conclusion}
+
+\bibliographystyle{splncs04}
+\bibliography{references}
+
+\end{document}

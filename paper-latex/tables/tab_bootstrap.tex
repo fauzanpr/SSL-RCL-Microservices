@@ -1,0 +1,22 @@
+\begin{table}
+\caption{Paired bootstrap (10.000 resampel) untuk selisih AC@1 antara encoder transfer dan encoder acak, hanya TS2Vec. Signifikansi sesuai pernyataan pada slide; interval kepercayaan hanya ditampilkan secara grafis di slide dan tidak direproduksi di sini.}\label{tab:bootstrap}
+\centering
+\small
+\begin{tabular}{llcc}
+\toprule
+Target (sumber) & Pengaturan & Selisih & Signifikan\\
+\midrule
+RE2 (RE1) & FineLast 10\%  & 0,00 & tidak\\
+          & FineLast 25\%  & +0,06 & ya\\
+          & FineLast 50\%  & +0,07 & ya\\
+          & FineLast 100\% & +0,05 & ya\\
+          & FineAll 25\%   & +0,03 & tidak\\
+          & FineAll 50\%   & +0,04 & ya\\
+\midrule
+RE1 (RE2) & FineLast 10\%  & 0,00 & tidak\\
+          & FineLast 25\%  & $-$0,02 & tidak\\
+          & FineLast 50\%  & $-$0,01 & tidak\\
+          & FineLast 100\% & 0,00 & tidak\\
+\bottomrule
+\end{tabular}
+\end{table}
