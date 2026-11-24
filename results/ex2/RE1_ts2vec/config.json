@@ -17,13 +17,14 @@
     1.0
   ],
   "modes": [
-    "FineLast"
+    "FineLast",
+    "FineAll"
   ],
   "no_indomain": false,
   "no_scratch": false,
   "fineall_epochs": 30,
-  "ckpt_dir": "/home/ojan/AI Labs/SSL-RCL-Microservices/checkpoints/ex1",
+  "ckpt_dir": "C:\\Users\\edy\\vsc-projects\\SSL-RCL-Microservices\\checkpoints\\ex1",
   "out_dir": null,
   "resume": false,
-  "device": "cpu"
+  "device": "cuda"
 }
