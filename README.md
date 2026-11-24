@@ -64,6 +64,7 @@ Di WhatsApp, kirim sebagai **Dokumen**, bukan foto/media, supaya file tidak diub
 ```bash
 python scripts/run_ex1.py --source RE1   # juga RE2, RE3; hasil ke results/ex1/<S>_ts2vec/
 python scripts/run_ex1.py --source RE1 --model timemae   # hasil ke results/ex1/<S>_timemae/ (CUDA dipilih otomatis)
+python scripts/run_ex1.py --source RE1 --model run       # hasil ke results/ex1/<S>_run/ (pre-training RUN ±20 detik di GPU)
 python scripts/diagnose_prior.py         # uji prior / anomali dihapus
 ```
 
@@ -96,7 +97,7 @@ python scripts/run_ex2.py --target RE2 --modes FineAll --resume          # lanju
 ## Struktur
 ```
 src/ssl_rcl/        data.py (loader + skema K=5), baseline.py (heuristik |z|), finetune.py (FineLast/FineAll)
-src/ssl_rcl/models/ ts2vec.py, timemae.py  (RUN: belum)
+src/ssl_rcl/models/ ts2vec.py, timemae.py, run.py
 scripts/            download_dataset.py, prepare_data.py, run_ex1.py, run_ex2.py, diagnose_prior.py,
                     paired_test.py, launch_ex1.py + check_ex1.py (background, ex1 dan ex2)
 analysis/           metric_schema_audit.py -> report/metric_audit/

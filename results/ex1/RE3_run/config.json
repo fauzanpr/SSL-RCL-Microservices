@@ -1,0 +1,29 @@
+{
+  "source": "RE3",
+  "model": "run",
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "n_iters": 2000,
+  "pt_window": 540,
+  "pt_stride": 270,
+  "fineall_epochs": 30,
+  "no_scratch": false,
+  "device": "cuda",
+  "pretrain_device": "cuda",
+  "tm_patch": 12,
+  "tm_dim": 64,
+  "tm_depth": 8,
+  "tm_vocab": 128,
+  "tm_mask_ratio": 0.6,
+  "tm_batch": 64,
+  "tm_gamma": 5.0,
+  "run_dim": 64,
+  "run_window": 32,
+  "run_ma": 25,
+  "run_batch": 128,
+  "run_lr": 0.001,
+  "run_mask_p": 0.5
+}

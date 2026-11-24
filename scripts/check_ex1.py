@@ -22,7 +22,7 @@ sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
 p = argparse.ArgumentParser()
 p.add_argument("--exp", default="ex1", choices=["ex1", "ex2"])
-p.add_argument("--model", default="timemae", choices=["ts2vec", "timemae"])
+p.add_argument("--model", default="timemae", choices=["ts2vec", "timemae", "run"])
 p.add_argument("--watch", type=int, default=0, help="refresh tiap N detik")
 p.add_argument("--tail", type=int, default=0, help="tampilkan N baris terakhir log RE yang aktif")
 args = p.parse_args()

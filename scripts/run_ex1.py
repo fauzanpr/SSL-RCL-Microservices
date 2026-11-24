@@ -3,7 +3,7 @@
     python scripts/run_ex1.py --source RE1 --model ts2vec --seeds 0 1 2
 
 Untuk setiap seed:
-  1. Pre-training TS2Vec pada window per service dari kasus split TRAIN (seluruh rekaman, tanpa label).
+  1. Pre-training (TS2Vec / TimeMAE / RUN) pada window per service dari kasus split TRAIN (seluruh rekaman, tanpa label).
   2. Fine-tuning lokalisasi root service: FineLast dan FineAll.
   3. Kontrol "scratch": encoder acak (tanpa pre-training) dengan FineLast/FineAll yang sama.
   4. Evaluasi di split TEST; baseline heuristik dihitung di split test yang sama.
@@ -30,15 +30,16 @@ sys.path.insert(0, str(ROOT / "src"))
 from ssl_rcl.baseline import heuristic_table  # noqa: E402
 from ssl_rcl.data import CORE_METRICS, build_samples, make_pretrain_windows, stratified_split  # noqa: E402
 from ssl_rcl.finetune import predict_table, summarize_ranks, train_fineall, train_finelast  # noqa: E402
+from ssl_rcl.models.run import RUNEncoder, pretrain_run  # noqa: E402
 from ssl_rcl.models.timemae import TimeMAEEncoder, pretrain_timemae  # noqa: E402
 from ssl_rcl.models.ts2vec import TSEncoder, pretrain_ts2vec  # noqa: E402
 
 p = argparse.ArgumentParser()
 p.add_argument("--source", default="RE1")
-p.add_argument("--model", default="ts2vec", choices=["ts2vec", "timemae"])
+p.add_argument("--model", default="ts2vec", choices=["ts2vec", "timemae", "run"])
 p.add_argument("--seeds", nargs="+", type=int, default=[0, 1, 2])
 p.add_argument("--n-iters", type=int, default=None,
-               help="iterasi pre-training (default: ts2vec 600 = kode resmi, timemae 3000)")
+               help="iterasi pre-training (default: ts2vec 600 = kode resmi, timemae 3000, run 2000)")
 p.add_argument("--pt-window", type=int, default=540)
 p.add_argument("--pt-stride", type=int, default=270)
 p.add_argument("--fineall-epochs", type=int, default=30)
@@ -57,11 +58,19 @@ p.add_argument("--tm-vocab", type=int, default=128)
 p.add_argument("--tm-mask-ratio", type=float, default=0.6)
 p.add_argument("--tm-batch", type=int, default=64)
 p.add_argument("--tm-gamma", type=float, default=5.0, help="bobot loss keragaman codeword (bukan dari paper)")
+# --- hiperparameter RUN (default mengikuti paper: window 32, Adam lr 1e-3, batch 128)
+p.add_argument("--run-dim", type=int, default=64)
+p.add_argument("--run-window", type=int, default=32, help="panjang jendela DLinear w")
+p.add_argument("--run-ma", type=int, default=25, help="kernel moving average dekomposisi trend/seasonal")
+p.add_argument("--run-batch", type=int, default=128)
+p.add_argument("--run-lr", type=float, default=1e-3)
+p.add_argument("--run-mask-p", type=float, default=0.5, help="peluang timestamp di-mask di tiap view (pembeda konteks)")
 args = p.parse_args()
 if args.n_iters is None:
-    args.n_iters = 600 if args.model == "ts2vec" else 3000
+    args.n_iters = {"ts2vec": 600, "timemae": 3000, "run": 2000}[args.model]
 if args.pretrain_device == "auto":
-    args.pretrain_device = "cpu" if (args.model == "ts2vec" and args.device == "mps") else args.device
+    # TS2Vec dan RUN memakai random crop dengan panjang berubah-ubah (masalah memori di MPS)
+    args.pretrain_device = "cpu" if (args.model in ("ts2vec", "run") and args.device == "mps") else args.device
 
 device = torch.device(args.device)
 pt_device = torch.device(args.pretrain_device)
@@ -95,16 +104,22 @@ pred_rows, summary_rows, hist_rows, pt_logs = [], [], [], []
 def pretrain(windows, dev, seed):
     if args.model == "ts2vec":
         return pretrain_ts2vec(windows, 2 * K, dev, n_iters=args.n_iters, seed=seed)
-    return pretrain_timemae(windows, 2 * K, dev, n_iters=args.n_iters, batch_size=args.tm_batch,
-                            output_dims=args.tm_dim, patch_size=args.tm_patch, depth=args.tm_depth,
-                            vocab_size=args.tm_vocab, mask_ratio=args.tm_mask_ratio, gamma=args.tm_gamma, seed=seed)
+    if args.model == "timemae":
+        return pretrain_timemae(windows, 2 * K, dev, n_iters=args.n_iters, batch_size=args.tm_batch,
+                                output_dims=args.tm_dim, patch_size=args.tm_patch, depth=args.tm_depth,
+                                vocab_size=args.tm_vocab, mask_ratio=args.tm_mask_ratio, gamma=args.tm_gamma, seed=seed)
+    return pretrain_run(windows, 2 * K, dev, n_iters=args.n_iters, batch_size=args.run_batch, lr=args.run_lr,
+                        output_dims=args.run_dim, window=args.run_window, ma_kernel=args.run_ma,
+                        mask_p=args.run_mask_p, seed=seed)
 
 
 def new_encoder():
     """Encoder acak (kontrol scratch) dengan arsitektur yang sama seperti hasil pre-training."""
     if args.model == "ts2vec":
         return TSEncoder(2 * K)
-    return TimeMAEEncoder(2 * K, args.tm_dim, args.tm_patch, args.tm_depth)
+    if args.model == "timemae":
+        return TimeMAEEncoder(2 * K, args.tm_dim, args.tm_patch, args.tm_depth)
+    return RUNEncoder(2 * K, args.run_dim, args.run_window, args.run_ma, args.run_mask_p)
 
 
 def record(tag_variant, mode, seed, result, secs):

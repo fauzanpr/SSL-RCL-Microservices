@@ -30,7 +30,7 @@ from _ex1_common import (IS_WIN, LOG_DIR, ROOT, kill_tree, log_path, pid_alive, 
                          write_status)
 
 p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-p.add_argument("--model", default="timemae", choices=["ts2vec", "timemae"])
+p.add_argument("--model", default="timemae", choices=["ts2vec", "timemae", "run"])
 p.add_argument("--exp", default="ex1", choices=["ex1", "ex2"])
 p.add_argument("--sources", nargs="+", default=None, help="ex1: RE sumber; ex2: RE target (default ex1 RE1 RE2 RE3, ex2 RE1 RE2)")
 p.add_argument("--seeds", nargs="+", type=int, default=[0, 1, 2])
