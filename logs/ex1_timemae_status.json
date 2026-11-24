@@ -1,5 +1,6 @@
 {
   "state": "finished",
+  "exp": "ex1",
   "model": "timemae",
   "sources": [
     "RE1",
