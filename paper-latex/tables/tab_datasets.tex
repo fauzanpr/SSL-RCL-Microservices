@@ -1,0 +1,14 @@
+\begin{table}
+\caption{Dataset RCAEval yang dipakai dalam penelitian ini \cite{pham2024rcaeval}. Setiap dataset mencakup Online Boutique, Sock Shop, dan Train Ticket.}\label{tab:datasets}
+\centering
+\small
+\begin{tabular}{lrlll}
+\toprule
+Dataset & Kasus & Kasus per sistem & Telemetri & Tipe fault\\
+\midrule
+RE1 & 375 & 125 & Hanya metrik & CPU, MEM, DISK, DELAY, LOSS\\
+RE2 & 270 & 90 & Metrik, log, trace & Fault RE1 dan SOCKET\\
+RE3 & 90 & 30 & Metrik, log, trace & Fault tingkat kode (F1--F5)\\
+\bottomrule
+\end{tabular}
+\end{table}

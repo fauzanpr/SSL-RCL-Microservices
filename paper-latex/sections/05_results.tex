@@ -1,0 +1,28 @@
+\section{Hasil Eksperimen}\label{sec:results}
+Entri bertanda \pending\ adalah eksperimen yang belum dijalankan; tidak ada nilai yang diperkirakan. Hasil yang tersedia saat ini hanya untuk TS2Vec dan berasal dari laporan kemajuan proyek. Metrik yang dipakai adalah AC@1 kecuali dinyatakan lain.
+
+\subsection{C1: Kinerja RCA Antar Metode}
+Tabel~\ref{tab:compare} adalah perbandingan C1 yang didefinisikan pada Bagian~\ref{sec:fair}.
+\input{tables/tab_compare}
+\todo{Isi setelah eksperimen TimeMAE dan RUN selesai. Laporkan rata-rata $\pm$ SD dari 3 seed. Kerangka interpretasi: bandingkan metode hanya di dalam tabel ini; nyatakan anggaran tuning; jangan merangking metode dari hasil parsial.}
+
+\subsection{EX-1: Pre-training dan Evaluasi In-domain}
+Tabel~\ref{tab:ex1} melaporkan pre-training dan pengujian pada dataset yang sama.
+\input{tables/tab_ex1}
+Pada TS2Vec, model hasil fine-tuning melampaui heuristik pada RE1 dan RE2 di keempat konfigurasi, dan encoder acak sama baiknya dengan encoder hasil pre-training pada sebagian besar sel; selisih terbesar antara pre-training dan acak adalah 0,03, setara satu atau dua kasus uji. Pada RE3, setiap konfigurasi mencapai 1,00. \todo{Tambahkan baris TimeMAE dan RUN-encoder setelah eksperimen dijalankan.}
+
+\paragraph{Kontrol penghapusan anomali.} Data 240\,detik setelah injeksi diganti dengan salinan 240\,detik sebelum injeksi (Tabel~\ref{tab:anomaly}). AC@1 turun menjadi 0,03, 0,09, dan 0 pada RE1, RE2, dan RE3, jauh di bawah nilai aslinya. Hal ini menunjukkan bahwa model bergantung pada anomali dan tidak hanya pada identitas service. Slide melaporkan acuan tebakan acak sebesar $\pm$0,06; arti pastinya harus diklarifikasi sebelum dipakai sebagai chance level (Bagian~\ref{sec:metrics}).
+\input{tables/tab_anomaly}
+
+\subsection{EX-2: Transfer Lintas Dataset}
+Tabel~\ref{tab:ex2} dan Gambar~\ref{fig:ex2} melaporkan RE2 sebagai target dengan mode FineLast, sedangkan Tabel~\ref{tab:bootstrap} melaporkan paired bootstrap terhadap encoder acak.
+\input{tables/tab_ex2}
+\input{figures/fig_ex2}
+\input{tables/tab_bootstrap}
+Pada TS2Vec dengan RE2 sebagai target, encoder dari RE1 menghasilkan AC@1 sekitar 0,90--0,91 dengan 25\%--100\% label, dibandingkan 0,84--0,86 untuk encoder acak, dan selisihnya signifikan pada 4 dari 6 pengaturan yang dijalankan. Dengan 10\% label, semua encoder setara. Encoder dari RE3 tidak memberi manfaat. Dengan RE1 sebagai target, tidak ada encoder sumber yang memberi selisih signifikan.
+
+\subsection{C2 dan C3: Pre-training, Label, dan Fine-tuning}
+Tabel~\ref{tab:ex1}--\ref{tab:bootstrap} adalah bukti untuk kedua pertanyaan ini. Pada TS2Vec, FineAll tidak lebih baik daripada FineLast pada pengaturan yang dilaporkan. Untuk TimeMAE dan RUN-encoder, tabel yang sama dan Gambar~\ref{fig:ex2} akan diperluas, dan keuntungan terhadap encoder acak milik masing-masing metode adalah besaran yang dibandingkan antar metode.
+
+\subsection{Metrik Tambahan}
+\todo{AC@3 dan Avg@5 beserta chance level, setelah jumlah service per sistem diketahui dan kode metrik diterapkan pada semua metode.}

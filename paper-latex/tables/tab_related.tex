@@ -1,0 +1,17 @@
+\begin{table}
+\caption{Perbandingan metode terkait dengan penelitian ini (informasi diambil dari paper yang dikutip).}\label{tab:related}
+\centering
+\scriptsize
+\setlength{\tabcolsep}{2.5pt}
+\begin{tabular}{p{1.5cm}p{2.0cm}p{2.0cm}p{2.9cm}p{2.0cm}}
+\toprule
+ & Sinyal pembelajaran & Label dibutuhkan & Data yang dievaluasi & Transfer lintas dataset\\
+\midrule
+TS2Vec \cite{yue2022ts2vec} & Kontrastif hierarkis & Hanya untuk tugas hilir & UCR, UEA; peramalan; deteksi anomali & Terbatas (encoder dilatih pada FordA, diuji pada deteksi anomali Yahoo dan KPI), bukan RCA\\
+TimeMAE \cite{cheng2026timemae} & Masked codeword dan regresi & Hanya untuk tugas hilir & 5 dataset klasifikasi & Ya (HAR $\rightarrow$ empat dataset), bukan RCA\\
+RUN \cite{lin2024run} & Backbone kontrastif, graf Granger per kasus & Tidak ada & Sintetis; Sock Shop & Tidak diteliti\\
+ART \cite{sun2024art} & Prediksi langkah berikutnya pada data normal & Tidak ada untuk RCL & D1 (publik), D2 (privat) & Tidak diteliti\\
+Penelitian ini & TS2Vec, TimeMAE, RUN-encoder dengan scoring head & Label untuk fine-tuning & RCAEval RE1--RE3 & Ya (RE1, RE2, RE3)\\
+\bottomrule
+\end{tabular}
+\end{table}
