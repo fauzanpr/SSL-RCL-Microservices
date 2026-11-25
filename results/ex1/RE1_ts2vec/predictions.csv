@@ -21,8 +21,8 @@ re1ob_currencyservice_mem_4,ob,mem,1,pretrain,FineLast,0
 re1ob_currencyservice_mem_5,ob,mem,1,pretrain,FineLast,0
 re1ob_productcatalogservice_delay_3,ob,delay,1,pretrain,FineLast,0
 re1ob_productcatalogservice_delay_4,ob,delay,1,pretrain,FineLast,0
-re1ob_productcatalogservice_loss_1,ob,loss,2,pretrain,FineLast,0
-re1ob_productcatalogservice_loss_5,ob,loss,3,pretrain,FineLast,0
+re1ob_productcatalogservice_loss_1,ob,loss,1,pretrain,FineLast,0
+re1ob_productcatalogservice_loss_5,ob,loss,2,pretrain,FineLast,0
 re1ob_productcatalogservice_mem_1,ob,mem,1,pretrain,FineLast,0
 re1ss_carts_cpu_4,ss,cpu,1,pretrain,FineLast,0
 re1ss_carts_disk_3,ss,disk,1,pretrain,FineLast,0
@@ -63,7 +63,7 @@ re1tt_ts-route-service_cpu_4,tt,cpu,1,pretrain,FineLast,0
 re1tt_ts-route-service_cpu_5,tt,cpu,1,pretrain,FineLast,0
 re1tt_ts-route-service_disk_1,tt,disk,1,pretrain,FineLast,0
 re1tt_ts-route-service_disk_3,tt,disk,1,pretrain,FineLast,0
-re1tt_ts-route-service_loss_3,tt,loss,3,pretrain,FineLast,0
+re1tt_ts-route-service_loss_3,tt,loss,2,pretrain,FineLast,0
 re1tt_ts-train-service_cpu_2,tt,cpu,1,pretrain,FineLast,0
 re1tt_ts-train-service_cpu_3,tt,cpu,1,pretrain,FineLast,0
 re1tt_ts-train-service_loss_1,tt,loss,3,pretrain,FineLast,0
@@ -82,11 +82,11 @@ re1ob_adservice_mem_3,ob,mem,1,pretrain,FineAll,0
 re1ob_cartservice_cpu_4,ob,cpu,1,pretrain,FineAll,0
 re1ob_cartservice_disk_1,ob,disk,1,pretrain,FineAll,0
 re1ob_cartservice_disk_4,ob,disk,1,pretrain,FineAll,0
-re1ob_cartservice_loss_3,ob,loss,1,pretrain,FineAll,0
+re1ob_cartservice_loss_3,ob,loss,2,pretrain,FineAll,0
 re1ob_cartservice_mem_3,ob,mem,1,pretrain,FineAll,0
 re1ob_checkoutservice_disk_2,ob,disk,1,pretrain,FineAll,0
 re1ob_checkoutservice_disk_5,ob,disk,1,pretrain,FineAll,0
-re1ob_checkoutservice_loss_5,ob,loss,3,pretrain,FineAll,0
+re1ob_checkoutservice_loss_5,ob,loss,4,pretrain,FineAll,0
 re1ob_checkoutservice_mem_1,ob,mem,1,pretrain,FineAll,0
 re1ob_checkoutservice_mem_5,ob,mem,1,pretrain,FineAll,0
 re1ob_currencyservice_disk_1,ob,disk,1,pretrain,FineAll,0
@@ -97,12 +97,12 @@ re1ob_currencyservice_mem_5,ob,mem,1,pretrain,FineAll,0
 re1ob_productcatalogservice_delay_3,ob,delay,1,pretrain,FineAll,0
 re1ob_productcatalogservice_delay_4,ob,delay,1,pretrain,FineAll,0
 re1ob_productcatalogservice_loss_1,ob,loss,1,pretrain,FineAll,0
-re1ob_productcatalogservice_loss_5,ob,loss,1,pretrain,FineAll,0
+re1ob_productcatalogservice_loss_5,ob,loss,3,pretrain,FineAll,0
 re1ob_productcatalogservice_mem_1,ob,mem,1,pretrain,FineAll,0
 re1ss_carts_cpu_4,ss,cpu,1,pretrain,FineAll,0
 re1ss_carts_disk_3,ss,disk,1,pretrain,FineAll,0
 re1ss_carts_disk_4,ss,disk,1,pretrain,FineAll,0
-re1ss_carts_loss_5,ss,loss,1,pretrain,FineAll,0
+re1ss_carts_loss_5,ss,loss,2,pretrain,FineAll,0
 re1ss_carts_mem_4,ss,mem,1,pretrain,FineAll,0
 re1ss_catalogue_cpu_1,ss,cpu,1,pretrain,FineAll,0
 re1ss_catalogue_cpu_5,ss,cpu,1,pretrain,FineAll,0
@@ -138,7 +138,7 @@ re1tt_ts-route-service_cpu_4,tt,cpu,1,pretrain,FineAll,0
 re1tt_ts-route-service_cpu_5,tt,cpu,1,pretrain,FineAll,0
 re1tt_ts-route-service_disk_1,tt,disk,1,pretrain,FineAll,0
 re1tt_ts-route-service_disk_3,tt,disk,1,pretrain,FineAll,0
-re1tt_ts-route-service_loss_3,tt,loss,2,pretrain,FineAll,0
+re1tt_ts-route-service_loss_3,tt,loss,1,pretrain,FineAll,0
 re1tt_ts-train-service_cpu_2,tt,cpu,1,pretrain,FineAll,0
 re1tt_ts-train-service_cpu_3,tt,cpu,1,pretrain,FineAll,0
 re1tt_ts-train-service_loss_1,tt,loss,3,pretrain,FineAll,0
@@ -172,7 +172,7 @@ re1ob_currencyservice_mem_5,ob,mem,1,scratch,FineLast,0
 re1ob_productcatalogservice_delay_3,ob,delay,1,scratch,FineLast,0
 re1ob_productcatalogservice_delay_4,ob,delay,1,scratch,FineLast,0
 re1ob_productcatalogservice_loss_1,ob,loss,1,scratch,FineLast,0
-re1ob_productcatalogservice_loss_5,ob,loss,2,scratch,FineLast,0
+re1ob_productcatalogservice_loss_5,ob,loss,3,scratch,FineLast,0
 re1ob_productcatalogservice_mem_1,ob,mem,1,scratch,FineLast,0
 re1ss_carts_cpu_4,ss,cpu,1,scratch,FineLast,0
 re1ss_carts_disk_3,ss,disk,1,scratch,FineLast,0
@@ -213,7 +213,7 @@ re1tt_ts-route-service_cpu_4,tt,cpu,1,scratch,FineLast,0
 re1tt_ts-route-service_cpu_5,tt,cpu,1,scratch,FineLast,0
 re1tt_ts-route-service_disk_1,tt,disk,1,scratch,FineLast,0
 re1tt_ts-route-service_disk_3,tt,disk,1,scratch,FineLast,0
-re1tt_ts-route-service_loss_3,tt,loss,2,scratch,FineLast,0
+re1tt_ts-route-service_loss_3,tt,loss,3,scratch,FineLast,0
 re1tt_ts-train-service_cpu_2,tt,cpu,1,scratch,FineLast,0
 re1tt_ts-train-service_cpu_3,tt,cpu,1,scratch,FineLast,0
 re1tt_ts-train-service_loss_1,tt,loss,1,scratch,FineLast,0
@@ -246,7 +246,7 @@ re1ob_currencyservice_mem_4,ob,mem,1,scratch,FineAll,0
 re1ob_currencyservice_mem_5,ob,mem,1,scratch,FineAll,0
 re1ob_productcatalogservice_delay_3,ob,delay,1,scratch,FineAll,0
 re1ob_productcatalogservice_delay_4,ob,delay,1,scratch,FineAll,0
-re1ob_productcatalogservice_loss_1,ob,loss,1,scratch,FineAll,0
+re1ob_productcatalogservice_loss_1,ob,loss,2,scratch,FineAll,0
 re1ob_productcatalogservice_loss_5,ob,loss,3,scratch,FineAll,0
 re1ob_productcatalogservice_mem_1,ob,mem,1,scratch,FineAll,0
 re1ss_carts_cpu_4,ss,cpu,1,scratch,FineAll,0
@@ -366,7 +366,7 @@ re1tt_ts-route-service_disk_3,tt,disk,1,pretrain,FineLast,1
 re1tt_ts-route-service_loss_3,tt,loss,2,pretrain,FineLast,1
 re1tt_ts-train-service_cpu_2,tt,cpu,1,pretrain,FineLast,1
 re1tt_ts-train-service_cpu_3,tt,cpu,1,pretrain,FineLast,1
-re1tt_ts-train-service_loss_1,tt,loss,2,pretrain,FineLast,1
+re1tt_ts-train-service_loss_1,tt,loss,3,pretrain,FineLast,1
 re1tt_ts-train-service_loss_2,tt,loss,1,pretrain,FineLast,1
 re1tt_ts-train-service_mem_1,tt,mem,1,pretrain,FineLast,1
 re1tt_ts-travel-service_cpu_4,tt,cpu,1,pretrain,FineLast,1
@@ -397,7 +397,7 @@ re1ob_currencyservice_mem_5,ob,mem,1,pretrain,FineAll,1
 re1ob_productcatalogservice_delay_3,ob,delay,1,pretrain,FineAll,1
 re1ob_productcatalogservice_delay_4,ob,delay,1,pretrain,FineAll,1
 re1ob_productcatalogservice_loss_1,ob,loss,1,pretrain,FineAll,1
-re1ob_productcatalogservice_loss_5,ob,loss,2,pretrain,FineAll,1
+re1ob_productcatalogservice_loss_5,ob,loss,1,pretrain,FineAll,1
 re1ob_productcatalogservice_mem_1,ob,mem,1,pretrain,FineAll,1
 re1ss_carts_cpu_4,ss,cpu,1,pretrain,FineAll,1
 re1ss_carts_disk_3,ss,disk,1,pretrain,FineAll,1
@@ -438,7 +438,7 @@ re1tt_ts-route-service_cpu_4,tt,cpu,1,pretrain,FineAll,1
 re1tt_ts-route-service_cpu_5,tt,cpu,1,pretrain,FineAll,1
 re1tt_ts-route-service_disk_1,tt,disk,1,pretrain,FineAll,1
 re1tt_ts-route-service_disk_3,tt,disk,1,pretrain,FineAll,1
-re1tt_ts-route-service_loss_3,tt,loss,2,pretrain,FineAll,1
+re1tt_ts-route-service_loss_3,tt,loss,3,pretrain,FineAll,1
 re1tt_ts-train-service_cpu_2,tt,cpu,1,pretrain,FineAll,1
 re1tt_ts-train-service_cpu_3,tt,cpu,1,pretrain,FineAll,1
 re1tt_ts-train-service_loss_1,tt,loss,3,pretrain,FineAll,1
@@ -536,7 +536,7 @@ re1ob_cartservice_loss_3,ob,loss,1,scratch,FineAll,1
 re1ob_cartservice_mem_3,ob,mem,1,scratch,FineAll,1
 re1ob_checkoutservice_disk_2,ob,disk,1,scratch,FineAll,1
 re1ob_checkoutservice_disk_5,ob,disk,1,scratch,FineAll,1
-re1ob_checkoutservice_loss_5,ob,loss,2,scratch,FineAll,1
+re1ob_checkoutservice_loss_5,ob,loss,3,scratch,FineAll,1
 re1ob_checkoutservice_mem_1,ob,mem,1,scratch,FineAll,1
 re1ob_checkoutservice_mem_5,ob,mem,1,scratch,FineAll,1
 re1ob_currencyservice_disk_1,ob,disk,1,scratch,FineAll,1
@@ -544,7 +544,7 @@ re1ob_currencyservice_mem_2,ob,mem,1,scratch,FineAll,1
 re1ob_currencyservice_mem_3,ob,mem,1,scratch,FineAll,1
 re1ob_currencyservice_mem_4,ob,mem,1,scratch,FineAll,1
 re1ob_currencyservice_mem_5,ob,mem,1,scratch,FineAll,1
-re1ob_productcatalogservice_delay_3,ob,delay,1,scratch,FineAll,1
+re1ob_productcatalogservice_delay_3,ob,delay,2,scratch,FineAll,1
 re1ob_productcatalogservice_delay_4,ob,delay,2,scratch,FineAll,1
 re1ob_productcatalogservice_loss_1,ob,loss,1,scratch,FineAll,1
 re1ob_productcatalogservice_loss_5,ob,loss,3,scratch,FineAll,1
@@ -570,7 +570,7 @@ re1ss_payment_disk_5,ss,disk,1,scratch,FineAll,1
 re1ss_payment_mem_1,ss,mem,1,scratch,FineAll,1
 re1ss_payment_mem_4,ss,mem,1,scratch,FineAll,1
 re1ss_user_cpu_3,ss,cpu,1,scratch,FineAll,1
-re1ss_user_delay_3,ss,delay,2,scratch,FineAll,1
+re1ss_user_delay_3,ss,delay,1,scratch,FineAll,1
 re1ss_user_delay_4,ss,delay,1,scratch,FineAll,1
 re1ss_user_disk_2,ss,disk,1,scratch,FineAll,1
 re1ss_user_disk_5,ss,disk,1,scratch,FineAll,1
@@ -591,7 +591,7 @@ re1tt_ts-route-service_disk_3,tt,disk,1,scratch,FineAll,1
 re1tt_ts-route-service_loss_3,tt,loss,3,scratch,FineAll,1
 re1tt_ts-train-service_cpu_2,tt,cpu,1,scratch,FineAll,1
 re1tt_ts-train-service_cpu_3,tt,cpu,1,scratch,FineAll,1
-re1tt_ts-train-service_loss_1,tt,loss,2,scratch,FineAll,1
+re1tt_ts-train-service_loss_1,tt,loss,1,scratch,FineAll,1
 re1tt_ts-train-service_loss_2,tt,loss,1,scratch,FineAll,1
 re1tt_ts-train-service_mem_1,tt,mem,1,scratch,FineAll,1
 re1tt_ts-travel-service_cpu_4,tt,cpu,1,scratch,FineAll,1
@@ -607,7 +607,7 @@ re1ob_adservice_mem_3,ob,mem,1,pretrain,FineLast,2
 re1ob_cartservice_cpu_4,ob,cpu,1,pretrain,FineLast,2
 re1ob_cartservice_disk_1,ob,disk,1,pretrain,FineLast,2
 re1ob_cartservice_disk_4,ob,disk,1,pretrain,FineLast,2
-re1ob_cartservice_loss_3,ob,loss,1,pretrain,FineLast,2
+re1ob_cartservice_loss_3,ob,loss,2,pretrain,FineLast,2
 re1ob_cartservice_mem_3,ob,mem,1,pretrain,FineLast,2
 re1ob_checkoutservice_disk_2,ob,disk,1,pretrain,FineLast,2
 re1ob_checkoutservice_disk_5,ob,disk,1,pretrain,FineLast,2
@@ -627,7 +627,7 @@ re1ob_productcatalogservice_mem_1,ob,mem,1,pretrain,FineLast,2
 re1ss_carts_cpu_4,ss,cpu,1,pretrain,FineLast,2
 re1ss_carts_disk_3,ss,disk,1,pretrain,FineLast,2
 re1ss_carts_disk_4,ss,disk,1,pretrain,FineLast,2
-re1ss_carts_loss_5,ss,loss,1,pretrain,FineLast,2
+re1ss_carts_loss_5,ss,loss,2,pretrain,FineLast,2
 re1ss_carts_mem_4,ss,mem,1,pretrain,FineLast,2
 re1ss_catalogue_cpu_1,ss,cpu,1,pretrain,FineLast,2
 re1ss_catalogue_cpu_5,ss,cpu,1,pretrain,FineLast,2
@@ -720,7 +720,7 @@ re1ss_payment_disk_5,ss,disk,1,pretrain,FineAll,2
 re1ss_payment_mem_1,ss,mem,1,pretrain,FineAll,2
 re1ss_payment_mem_4,ss,mem,1,pretrain,FineAll,2
 re1ss_user_cpu_3,ss,cpu,1,pretrain,FineAll,2
-re1ss_user_delay_3,ss,delay,2,pretrain,FineAll,2
+re1ss_user_delay_3,ss,delay,1,pretrain,FineAll,2
 re1ss_user_delay_4,ss,delay,1,pretrain,FineAll,2
 re1ss_user_disk_2,ss,disk,1,pretrain,FineAll,2
 re1ss_user_disk_5,ss,disk,1,pretrain,FineAll,2
@@ -772,7 +772,7 @@ re1ob_currencyservice_mem_5,ob,mem,1,scratch,FineLast,2
 re1ob_productcatalogservice_delay_3,ob,delay,1,scratch,FineLast,2
 re1ob_productcatalogservice_delay_4,ob,delay,1,scratch,FineLast,2
 re1ob_productcatalogservice_loss_1,ob,loss,1,scratch,FineLast,2
-re1ob_productcatalogservice_loss_5,ob,loss,1,scratch,FineLast,2
+re1ob_productcatalogservice_loss_5,ob,loss,2,scratch,FineLast,2
 re1ob_productcatalogservice_mem_1,ob,mem,1,scratch,FineLast,2
 re1ss_carts_cpu_4,ss,cpu,1,scratch,FineLast,2
 re1ss_carts_disk_3,ss,disk,1,scratch,FineLast,2
@@ -813,7 +813,7 @@ re1tt_ts-route-service_cpu_4,tt,cpu,1,scratch,FineLast,2
 re1tt_ts-route-service_cpu_5,tt,cpu,1,scratch,FineLast,2
 re1tt_ts-route-service_disk_1,tt,disk,1,scratch,FineLast,2
 re1tt_ts-route-service_disk_3,tt,disk,1,scratch,FineLast,2
-re1tt_ts-route-service_loss_3,tt,loss,2,scratch,FineLast,2
+re1tt_ts-route-service_loss_3,tt,loss,3,scratch,FineLast,2
 re1tt_ts-train-service_cpu_2,tt,cpu,1,scratch,FineLast,2
 re1tt_ts-train-service_cpu_3,tt,cpu,1,scratch,FineLast,2
 re1tt_ts-train-service_loss_1,tt,loss,1,scratch,FineLast,2
@@ -863,7 +863,7 @@ re1ss_orders_cpu_1,ss,cpu,1,scratch,FineAll,2
 re1ss_orders_cpu_2,ss,cpu,1,scratch,FineAll,2
 re1ss_orders_cpu_4,ss,cpu,1,scratch,FineAll,2
 re1ss_orders_loss_2,ss,loss,1,scratch,FineAll,2
-re1ss_orders_loss_5,ss,loss,1,scratch,FineAll,2
+re1ss_orders_loss_5,ss,loss,2,scratch,FineAll,2
 re1ss_payment_disk_2,ss,disk,1,scratch,FineAll,2
 re1ss_payment_disk_4,ss,disk,1,scratch,FineAll,2
 re1ss_payment_disk_5,ss,disk,1,scratch,FineAll,2

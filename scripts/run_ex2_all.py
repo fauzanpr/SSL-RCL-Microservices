@@ -14,15 +14,19 @@ dibuat ulang lewat `run_ex1.py --pretrain-only` (hanya pre-training, results/ex1
 
 Tanpa --resume, results/ex2/<target>_<model>/ ditimpa (hasil lama ada di git).
 Log per run : logs/ex2_<target>_<model>.log     Hasil: results/ex2/<target>_<model>/
+Status      : logs/ex2_<model>_status.json   (format sama dengan launch_ex1.py; dibaca scripts/check_ex1.py --exp ex2)
 Satu run yang gagal tidak menghentikan run lain; kode keluar != 0 bila ada yang gagal.
 """
 
 import argparse
+import os
 import subprocess
 import sys
 import time
 from datetime import datetime
 from pathlib import Path
+
+from _ex1_common import write_status
 
 ROOT = Path(__file__).resolve().parents[1]
 ALL_RE = ["RE1", "RE2", "RE3"]
@@ -57,8 +61,21 @@ def ckpt(re_name, model, seed):
     return ROOT / "checkpoints" / "ex1" / f"{re_name}_{model}_seed{seed}.pt"
 
 
+def init_status(model):
+    """Status awal per model; `total` = jumlah run per target (untuk progress bar check_ex1.py)."""
+    total = {t: len(args.fractions) * len(args.seeds) * len(args.modes) * (len([r for r in ALL_RE if r != t]) + 2)
+             for t in args.targets}
+    st = dict(state="running", exp="ex2", model=model, sources=args.targets, seeds=args.seeds,
+              extra=["--fractions", *map(str, args.fractions), "--modes", *args.modes] + (["--resume"] if args.resume else []),
+              total=total, started=now(), worker_pid=os.getpid(), current=None, runs={})
+    if not args.dry_run:
+        write_status(model, st, "ex2")
+    return st
+
+
 failed, t_all = [], time.time()
 for model in args.models:
+    st = init_status(model)
     # 1. checkpoint EX-1 untuk semua RE (sumber transfer + indomain)
     for re_name in ALL_RE:
         miss = [s for s in args.seeds if not ckpt(re_name, model, s).exists()]
@@ -74,14 +91,24 @@ for model in args.models:
     # 2. EX-2 per target
     for target in args.targets:
         t = time.time()
+        st["current"] = target
+        st["runs"][target] = dict(state="running", started=now(), child_pid=None, exit_code=None)
+        if not args.dry_run:
+            write_status(model, st, "ex2")
         cmd = [sys.executable, "-u", str(ROOT / "scripts" / "run_ex2.py"), "--target", target, "--model", model,
                "--seeds", *map(str, args.seeds), "--fractions", *map(str, args.fractions),
                "--modes", *args.modes] + (["--resume"] if args.resume else [])
         code = run(cmd, ROOT / "logs" / f"ex2_{target}_{model}.log")
         print(f"[{now()}] {model} -> {target}: {'selesai' if code == 0 else f'GAGAL (kode {code})'} "
               f"({(time.time() - t) / 60:.1f} menit)", flush=True)
+        st["runs"][target].update(state="done" if code == 0 else "failed", finished=now(), exit_code=code)
+        if not args.dry_run:
+            write_status(model, st, "ex2")
         if code:
             failed.append(f"ex2 {target} {model}")
+    st.update(state="finished", current=None, finished=now())
+    if not args.dry_run:
+        write_status(model, st, "ex2")
 
 print(f"\n[{now()}] selesai dalam {(time.time() - t_all) / 60:.1f} menit. Gagal: {failed or 'tidak ada'}")
 sys.exit(1 if failed else 0)

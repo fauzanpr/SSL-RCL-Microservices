@@ -1,0 +1,48 @@
+{
+  "state": "finished",
+  "exp": "ex2",
+  "model": "ts2vec",
+  "sources": [
+    "RE1",
+    "RE2"
+  ],
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "extra": [
+    "--fractions",
+    "0.1",
+    "0.25",
+    "0.5",
+    "1.0",
+    "--modes",
+    "FineLast",
+    "FineAll"
+  ],
+  "total": {
+    "RE1": 96,
+    "RE2": 96
+  },
+  "started": "2026-11-25T04:35:22",
+  "worker_pid": null,
+  "current": null,
+  "runs": {
+    "RE1": {
+      "state": "done",
+      "started": "2026-11-25T04:35:22",
+      "child_pid": null,
+      "exit_code": 0,
+      "finished": "2026-11-25T04:57:26"
+    },
+    "RE2": {
+      "state": "done",
+      "started": "2026-11-25T04:57:27",
+      "child_pid": null,
+      "exit_code": 0,
+      "finished": "2026-11-25T05:13:15"
+    }
+  },
+  "finished": "2026-11-25T05:13:15"
+}

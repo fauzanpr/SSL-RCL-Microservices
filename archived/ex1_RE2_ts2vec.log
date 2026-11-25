@@ -1,0 +1,69 @@
+RE2: train/val/test = 165/60/45 | window pre-training (20680, 540, 10) | device mps
+
+=== seed 0 ===
+  iter    50/600  loss 8.1225  (29s)
+  iter   100/600  loss 2.8302  (55s)
+  iter   150/600  loss 2.5663  (79s)
+  iter   200/600  loss 2.2885  (105s)
+  iter   250/600  loss 2.0285  (133s)
+  iter   300/600  loss 1.8163  (158s)
+  iter   350/600  loss 1.5905  (186s)
+  iter   400/600  loss 1.3698  (213s)
+  iter   450/600  loss 1.1892  (241s)
+  iter   500/600  loss 1.2680  (270s)
+  iter   550/600  loss 0.9979  (302s)
+  iter   600/600  loss 1.0779  (329s)
+  pre-training selesai (330s)
+  pretrain  FineLast seed 0: AC@1=0.911 AC@3=0.933 AC@5=0.956 Avg@5=0.933 (14s)
+  pretrain  FineAll  seed 0: AC@1=0.844 AC@3=0.933 AC@5=0.956 Avg@5=0.920 (405s)
+  scratch   FineLast seed 0: AC@1=0.844 AC@3=0.933 AC@5=0.956 Avg@5=0.924 (15s)
+  scratch   FineAll  seed 0: AC@1=0.844 AC@3=0.933 AC@5=0.933 Avg@5=0.902 (538s)
+
+=== seed 1 ===
+  iter    50/600  loss 6.5743  (35s)
+  iter   100/600  loss 2.7835  (71s)
+  iter   150/600  loss 2.4348  (102s)
+  iter   200/600  loss 2.1230  (134s)
+  iter   250/600  loss 1.8806  (165s)
+  iter   300/600  loss 1.5806  (201s)
+  iter   350/600  loss 1.3925  (239s)
+  iter   400/600  loss 1.2700  (276s)
+  iter   450/600  loss 1.0613  (313s)
+  iter   500/600  loss 0.9456  (352s)
+  iter   550/600  loss 1.1431  (386s)
+  iter   600/600  loss 0.9316  (428s)
+  pre-training selesai (428s)
+  pretrain  FineLast seed 1: AC@1=0.889 AC@3=0.911 AC@5=0.956 Avg@5=0.916 (15s)
+  pretrain  FineAll  seed 1: AC@1=0.867 AC@3=0.911 AC@5=0.933 Avg@5=0.907 (435s)
+  scratch   FineLast seed 1: AC@1=0.867 AC@3=0.933 AC@5=0.978 Avg@5=0.933 (15s)
+  scratch   FineAll  seed 1: AC@1=0.867 AC@3=0.911 AC@5=0.956 Avg@5=0.916 (482s)
+
+=== seed 2 ===
+  iter    50/600  loss 6.8419  (43s)
+  iter   100/600  loss 2.7939  (87s)
+  iter   150/600  loss 2.3811  (129s)
+  iter   200/600  loss 2.1077  (168s)
+  iter   250/600  loss 1.8154  (203s)
+  iter   300/600  loss 1.5740  (234s)
+  iter   350/600  loss 1.2473  (265s)
+  iter   400/600  loss 1.2055  (291s)
+  iter   450/600  loss 1.1402  (318s)
+  iter   500/600  loss 1.1236  (343s)
+  iter   550/600  loss 1.0408  (370s)
+  iter   600/600  loss 1.0092  (396s)
+  pre-training selesai (396s)
+  pretrain  FineLast seed 2: AC@1=0.867 AC@3=0.911 AC@5=0.978 Avg@5=0.920 (11s)
+  pretrain  FineAll  seed 2: AC@1=0.867 AC@3=0.933 AC@5=0.956 Avg@5=0.924 (508s)
+  scratch   FineLast seed 2: AC@1=0.867 AC@3=0.933 AC@5=0.956 Avg@5=0.916 (13s)
+  scratch   FineAll  seed 2: AC@1=0.889 AC@3=0.956 AC@5=0.956 Avg@5=0.933 (497s)
+
+== Ringkasan test (mean ± std antar seed) ==
+                    AC@1          AC@3          AC@5         Avg@5       
+                    mean    std   mean    std   mean    std   mean    std
+variant  mode                                                            
+pretrain FineAll   0.859  0.013  0.926  0.013  0.948  0.013  0.917  0.009
+         FineLast  0.889  0.022  0.919  0.013  0.963  0.013  0.923  0.009
+scratch  FineAll   0.867  0.022  0.933  0.022  0.948  0.013  0.917  0.016
+         FineLast  0.859  0.013  0.933  0.000  0.963  0.013  0.924  0.009
+
+Heuristik (test): {'AC@1': 0.8, 'AC@3': 0.911, 'AC@5': 0.956, 'Avg@5': 0.898, 'n': 45}
